@@ -29,6 +29,7 @@
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuData = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDataEditVariables = new System.Windows.Forms.ToolStripMenuItem();
+            this.lsvData = new System.Windows.Forms.ListView();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -60,15 +61,29 @@
             // mnuDataEditVariables
             // 
             this.mnuDataEditVariables.Name = "mnuDataEditVariables";
-            this.mnuDataEditVariables.Size = new System.Drawing.Size(152, 22);
+            this.mnuDataEditVariables.Size = new System.Drawing.Size(143, 22);
             this.mnuDataEditVariables.Text = "&Edit Variables";
             this.mnuDataEditVariables.Click += new System.EventHandler(this.mnuDataEditVariables_Click);
+            // 
+            // lsvData
+            // 
+            this.lsvData.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lsvData.FullRowSelect = true;
+            this.lsvData.LabelEdit = true;
+            this.lsvData.Location = new System.Drawing.Point(0, 24);
+            this.lsvData.Name = "lsvData";
+            this.lsvData.Size = new System.Drawing.Size(616, 379);
+            this.lsvData.TabIndex = 1;
+            this.lsvData.UseCompatibleStateImageBehavior = false;
+            this.lsvData.View = System.Windows.Forms.View.Details;
+            this.lsvData.SelectedIndexChanged += new System.EventHandler(this.lsvData_SelectedIndexChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(616, 403);
+            this.Controls.Add(this.lsvData);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
@@ -86,6 +101,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFile;
         private System.Windows.Forms.ToolStripMenuItem mnuData;
         private System.Windows.Forms.ToolStripMenuItem mnuDataEditVariables;
+        private System.Windows.Forms.ListView lsvData;
     }
 }
 

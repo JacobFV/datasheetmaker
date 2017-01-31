@@ -33,7 +33,7 @@ namespace datasheetmaker
             if (SelectedVariable != null) {
                 txtName.Text = SelectedVariable.Name;
                 txtUnits.Text = SelectedVariable.Units;
-                chkIndependent.Checked = SelectedVariable.IsIndependent;
+                cboType.SelectedIndex = (int)SelectedVariable.Type;
             }
         }
 
@@ -55,18 +55,28 @@ namespace datasheetmaker
             SelectedVariable.Units = txtUnits.Text;
         }
 
-        private void chkIndependent_CheckedChanged(object sender, EventArgs e) {
-            SelectedVariable.IsIndependent = chkIndependent.Checked;
+        private void cboType_SelectedIndexChanged(object sender, EventArgs e) {
+            SelectedVariable.Type = (VariableType)cboType.SelectedIndex;
 
-            if (SelectedVariable.IsIndependent) {
-                tabSettings.SelectTab(tabIndependent);
+            switch (SelectedVariable.Type) {
+                case VariableType.Dimensional:
+                    tabSettings.SelectTab(tabDimensional);
 
-                lstIndependentValues.DataSource = SelectedVariable.Values;
-            }
-            else {
-                tabSettings.SelectTab(tabDependent);
+                    lstIndependentValues.DataSource = SelectedVariable.Values;
 
-                txtEquation.Text = SelectedVariable.Equation;
+                    break;
+
+                case VariableType.Independent:
+                    tabSettings.SelectTab(tabIndependent);
+
+                    break;
+
+                case VariableType.Dependent:
+                    tabSettings.SelectTab(tabDependent);
+
+                    txtEquation.Text = SelectedVariable.Equation;
+
+                    break;
             }
         }
 

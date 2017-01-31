@@ -12,7 +12,7 @@ namespace datasheetmaker
         public string Name { get; set; }
         public string Units { get; set; }
 
-        public bool IsIndependent { get; set; }
+        public VariableType Type { get; set; }
 
         /// <summary>
         /// For independent variables
