@@ -31,9 +31,9 @@ namespace datasheetmaker
             editorform.Variables = variables;
 
             editorform.ShowDialog(this);
-
+            dtaGrid.Rows.Clear();
+            dtaGrid.Columns.Clear();
             measurement_values.Clear();
-            lsvData.Clear();
 
             var dimensions =
                 variables.Where(_ => _.Type == VariableType.Dimensional).ToArray();
@@ -43,52 +43,66 @@ namespace datasheetmaker
 
             var calculations =
                 variables.Where(_ => _.Type == VariableType.Dependent).ToArray();
-
-            lsvData.Columns.Add("Index");
-
+            
+            dtaGrid.ColumnCount = variables.Count;
+            var k = 0;
             foreach (var variable in dimensions.Concat(measurements).Concat(calculations)) {
                 var column =
-                    new ColumnHeader();
-
-                column.Text = variable.Name;
+                    dtaGrid.Columns[k++];
                 
-                lsvData.Columns.Add(column);
+                column.Name = $"clm{variable.Name}";
+                column.HeaderText = variable.Name;
+                column.ReadOnly = variable.Type != VariableType.Independent;
             }
 
+            var kvps =
+                dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
+
             var i = 0;
-            foreach (var ordinates in Combinations(dimensions.Select(_ => _.Values).ToArray())) {
-                var row = new ListViewItem();
+            foreach (var ordinates in Combinations(kvps)) {
+                var row = new DataGridViewRow();
+                dtaGrid
+                    .Rows
+                    .Add(
+                            ordinates.Select(_ => _.Value)
+                                .Concat(measurements.Select(_ => ""))
+                                .Concat(calculations.Select(_ => ""))
+                                .ToArray()
+                        );
 
-                row.Text = $"Entry {++i}";
-                
-                foreach (var ordinate in ordinates)
-                    row.SubItems.Add(ordinate);
-                    //row.SubItems.Add(ordinate, Color.DarkBlue, Color.LightYellow, lsvData.Font);
+                continue;
+                var j = 0;
 
-                foreach (var measurement in measurements)
-                    row.SubItems.Add(measurement.Name);
-                    //row.SubItems.Add($"[{measurement.Name}]");
+                foreach (var ordinate in ordinates) {
+                    var cell = row.Cells[j++];
 
-                foreach (var calculation in calculations)
-                    row.SubItems.Add(calculation.Name);
-                    //row.SubItems.Add($"[{calculation.Name}]", Color.DarkGray, Color.LightGray, lsvData.Font);
+                    //cell.ReadOnly = true;
+                    cell.Value = ordinate.Key.Name;
+                }
 
-                lsvData.Items.Add(row);
+                foreach (var measurement in measurements) {
+                    var cell = row.Cells[j++];
+                    
+                    cell.ToolTipText = measurement.Name;
+                }
+
+                foreach (var calculation in calculations) {
+                    var cell = row.Cells[j++];
+
+                    cell.ReadOnly = true;
+                    cell.ToolTipText = calculation.Name;
+                }
             }
         }
 
-        IEnumerable<string[]> Combinations(IEnumerable<string>[] sources, int i = 0) {
+        IEnumerable<T[]> Combinations<T>(IEnumerable<T>[] sources, int i = 0) {
             if (i == sources.Length)
-                yield return new string[0];
+                yield return new T[0];
             else {
                 foreach (var item in sources[i])
                     foreach (var next_set in Combinations(sources, i + 1))
                         yield return new[] { item }.Concat(next_set).ToArray();
             }
-        }
-
-        private void lsvData_SelectedIndexChanged(object sender, EventArgs e) {
-
         }
     }
 }
