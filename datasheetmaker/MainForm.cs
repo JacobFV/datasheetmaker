@@ -4,10 +4,13 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml;
+using System.Xml.Linq;
 
 namespace datasheetmaker
 {
@@ -25,7 +28,7 @@ namespace datasheetmaker
 
             variables.Add(new DataVariable { Name = "abc" });
         }
-        
+
         private void mnuDataEditVariables_Click(object sender, EventArgs e) {
             var editorform =
                 new VariableEditorForm();
@@ -33,6 +36,11 @@ namespace datasheetmaker
             editorform.Variables = variables;
 
             editorform.ShowDialog(this);
+
+            Setup();
+        }
+
+        void Setup() {
             dtaGrid.Rows.Clear();
             dtaGrid.Columns.Clear();
 
@@ -44,7 +52,7 @@ namespace datasheetmaker
 
             var calculations =
                 variables.Where(_ => _.Type == VariableType.Dependent).ToArray();
-            
+
             dtaGrid.ColumnCount = variables.Count;
             var k = 0;
             foreach (var variable in dimensions.Concat(measurements).Concat(calculations)) {
@@ -92,7 +100,7 @@ namespace datasheetmaker
 
                 foreach (var measurement in measurements) {
                     var cell = row.Cells[j++];
-                    
+
                     cell.ToolTipText = measurement.Name;
                 }
 
@@ -112,6 +120,68 @@ namespace datasheetmaker
                 foreach (var item in sources[i])
                     foreach (var next_set in Combinations(sources, i + 1))
                         yield return new[] { item }.Concat(next_set).ToArray();
+            }
+        }
+
+        private void mnuFileOpen_Click(object sender, EventArgs e) {
+            diagOpen.ShowDialog(this);
+        }
+
+        private void mnuFileSave_Click(object sender, EventArgs e) {
+            diagSave.ShowDialog(this);
+        }
+
+        private void diagOpen_FileOk(object sender, CancelEventArgs e) {
+            using (var stream = diagOpen.OpenFile()) {
+                var file =
+                    XDocument.Load(stream);
+
+                var xdatasheet =
+                    file.Element("datasheet");
+                
+                variables.Clear();
+
+                foreach (var xvariable in xdatasheet.Element("variables").Elements("variable")) {
+                    var variable = new DataVariable();
+                    variable.Name = xvariable.Attribute("name").Value;
+                    variable.Type = (VariableType)Enum.Parse(typeof(VariableType), xvariable.Attribute("type").Value);
+                    variable.Units = xvariable.Attribute("units").Value;
+
+                    foreach (var xvalue in xvariable.Elements("value"))
+                        variable.Values.Add(xvalue.Value);
+
+                    variables.Add(variable);
+                }
+
+                Setup();
+            }
+        }
+
+        private void diagSave_FileOk(object sender, CancelEventArgs e) {
+            using (var file = XmlWriter.Create(diagSave.FileName)) {
+                file.WriteStartDocument();
+                file.WriteStartElement("datasheet");
+
+                file.WriteStartElement("variables");
+                foreach (var variable in variables) {
+                    file.WriteStartElement("variable");
+                    file.WriteAttributeString("name", variable.Name);
+                    file.WriteAttributeString("units", variable.Units);
+                    file.WriteAttributeString("type", variable.Type.ToString());
+
+                    foreach (var value in variable.Values)
+                        file.WriteElementString("value", value);
+
+                    file.WriteEndElement();
+                }
+                file.WriteEndElement();
+
+                file.WriteStartElement("measurements");
+
+                file.WriteEndElement();
+
+                file.WriteEndElement();
+                file.WriteEndDocument();
             }
         }
     }
