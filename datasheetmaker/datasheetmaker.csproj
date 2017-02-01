@@ -47,6 +47,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataVariable.cs" />
+    <Compile Include="expressions\NumberExpression.cs" />
+    <Compile Include="expressions\SubtractExpression.cs" />
+    <Compile Include="expressions\DivisionExpression.cs" />
+    <Compile Include="expressions\ExpressionParser.cs" />
+    <Compile Include="expressions\MultiplyExpression.cs" />
+    <Compile Include="expressions\AddExpression.cs" />
+    <Compile Include="expressions\IExpression.cs" />
+    <Compile Include="expressions\UnitsSI.cs" />
+    <Compile Include="expressions\VariableExpression.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -15,12 +15,14 @@ namespace datasheetmaker
     {
         BindingList<DataVariable> variables =
             new BindingList<DataVariable>();
-        readonly Dictionary<string, BindingList<string>> measurement_values =
-            new Dictionary<string, BindingList<string>>();
 
         public MainForm() {
             InitializeComponent();
-            
+
+            //ExpressionParser.Parse("1");
+            //ExpressionParser.Parse("4cm*2km");
+            //ExpressionParser.Parse("1+3");
+
             variables.Add(new DataVariable { Name = "abc" });
         }
         
@@ -33,7 +35,6 @@ namespace datasheetmaker
             editorform.ShowDialog(this);
             dtaGrid.Rows.Clear();
             dtaGrid.Columns.Clear();
-            measurement_values.Clear();
 
             var dimensions =
                 variables.Where(_ => _.Type == VariableType.Dimensional).ToArray();
@@ -49,9 +50,18 @@ namespace datasheetmaker
             foreach (var variable in dimensions.Concat(measurements).Concat(calculations)) {
                 var column =
                     dtaGrid.Columns[k++];
-                
+
+                //switch (variable.Type) {
+                //    case VariableType.Dependent:
+                //        column.DefaultCellStyle.BackColor = Color.AliceBlue;
+                //        break;
+
+                //    default:
+                //        break;
+                //}
+
                 column.Name = $"clm{variable.Name}";
-                column.HeaderText = variable.Name;
+                column.HeaderText = $"{variable.Name} ({variable.Units})";
                 column.ReadOnly = variable.Type != VariableType.Independent;
             }
 
