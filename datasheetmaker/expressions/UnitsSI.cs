@@ -18,7 +18,7 @@ namespace datasheetmaker
 
         public UnitsSI(params KeyValuePair<string, Tuple<int, int>>[] unitdegrees) {
             //TODO: this doesn't handle when units should be multiplied or divided by exponents of ten
-            this.unitdegrees = unitdegrees.Where(_ => _.Value.Item1 != 0 && _.Value.Item2 != 0).ToArray();
+            this.unitdegrees = unitdegrees.Where(_ => _.Value.Item2 != 0).ToArray();
         }
 
         public UnitsSI Recipricol() =>
@@ -41,7 +41,7 @@ namespace datasheetmaker
             new UnitsSI(
                     unitdegrees
                         .Select(_ => _.Key)
-                        .Concat(factor.unitdegrees.Select(_ => _.Key))
+                        .Union(factor.unitdegrees.Select(_ => _.Key))
                         .Select(
                                 unit =>
                                     new KeyValuePair<string, Tuple<int, int>>(
@@ -77,7 +77,7 @@ namespace datasheetmaker
                                         factor.Split('^');
 
                                     var unit = splt[0];
-                                    var base10degree = 1;
+                                    var base10degree = 0;
                                     var unitdegree = 1;
 
                                     if (unit.Length != 1) {

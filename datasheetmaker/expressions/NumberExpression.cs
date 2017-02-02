@@ -18,7 +18,7 @@ namespace datasheetmaker
             Units;
 
         static readonly char[] whitespace = " \t\n\r\f\v".ToCharArray();
-        static readonly char[] variablenamechars = "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM._".ToCharArray();
+        static readonly char[] variablenamechars = "^-+1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM._".ToCharArray();
 
         public static NumberExpression Parse(ref string src) {
             var digits_i = 0;
