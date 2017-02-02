@@ -15,5 +15,7 @@ namespace datasheetmaker
 
         public UnitsSI FindUnits(Dictionary<string, UnitsSI> variables) =>
             variables[Name];
+
+        public override string ToString() => Name;
     }
 }

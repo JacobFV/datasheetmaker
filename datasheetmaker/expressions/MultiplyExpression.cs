@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace datasheetmaker
 {
-    public sealed class DivisionExpression : IExpression
+    public sealed class MultiplyExpression : IExpression
     {
         public IExpression Left { get; set; }
         public IExpression Right { get; set; }
@@ -20,5 +20,8 @@ namespace datasheetmaker
 
             return left.Multiply(right.Recipricol());
         }
+
+        public override string ToString() =>
+            $"{Left}×{Right}";
     }
 }

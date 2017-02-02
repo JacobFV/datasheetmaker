@@ -27,15 +27,20 @@
         private void InitializeComponent() {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuData = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuDataEditVariables = new System.Windows.Forms.ToolStripMenuItem();
-            this.dtaGrid = new System.Windows.Forms.DataGridView();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
-            this.diagOpen = new System.Windows.Forms.OpenFileDialog();
-            this.diagSave = new System.Windows.Forms.SaveFileDialog();
+            this.mnuData = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDataEditVariables = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpFormattingUnits = new System.Windows.Forms.ToolStripMenuItem();
+            this.dtaGrid = new System.Windows.Forms.DataGridView();
+            this.diagOpen = new System.Windows.Forms.OpenFileDialog();
+            this.diagSave = new System.Windows.Forms.SaveFileDialog();
+            this.mnuFileSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileExportRawData = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileExportFormattedDatasheet = new System.Windows.Forms.ToolStripMenuItem();
+            this.diagExport = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtaGrid)).BeginInit();
             this.SuspendLayout();
@@ -56,41 +61,12 @@
             // 
             this.mnuFile.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFileOpen,
-            this.mnuFileSave});
+            this.mnuFileSave,
+            this.mnuFileSeparator1,
+            this.mnuFileExport});
             this.mnuFile.Name = "mnuFile";
             this.mnuFile.Size = new System.Drawing.Size(37, 20);
             this.mnuFile.Text = "&File";
-            // 
-            // mnuData
-            // 
-            this.mnuData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuDataEditVariables});
-            this.mnuData.Name = "mnuData";
-            this.mnuData.Size = new System.Drawing.Size(43, 20);
-            this.mnuData.Text = "&Data";
-            // 
-            // mnuDataEditVariables
-            // 
-            this.mnuDataEditVariables.Name = "mnuDataEditVariables";
-            this.mnuDataEditVariables.Size = new System.Drawing.Size(143, 22);
-            this.mnuDataEditVariables.Text = "&Edit Variables";
-            this.mnuDataEditVariables.Click += new System.EventHandler(this.mnuDataEditVariables_Click);
-            // 
-            // dtaGrid
-            // 
-            this.dtaGrid.AllowUserToAddRows = false;
-            this.dtaGrid.AllowUserToDeleteRows = false;
-            this.dtaGrid.AllowUserToResizeRows = false;
-            this.dtaGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dtaGrid.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dtaGrid.Location = new System.Drawing.Point(0, 24);
-            this.dtaGrid.Name = "dtaGrid";
-            this.dtaGrid.RowHeadersVisible = false;
-            this.dtaGrid.Size = new System.Drawing.Size(616, 379);
-            this.dtaGrid.TabIndex = 1;
-            this.dtaGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellEndEdit);
-            this.dtaGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dtaGrid_CellFormatting);
-            this.dtaGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellValueChanged);
             // 
             // mnuFileOpen
             // 
@@ -108,17 +84,20 @@
             this.mnuFileSave.Text = "&Save";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
             // 
-            // diagOpen
+            // mnuData
             // 
-            this.diagOpen.Filter = "Datasheet Maker Sheet Files (*.datasheetmakerdatasheet)|*.datasheetmakerdatasheet" +
-    "";
-            this.diagOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.diagOpen_FileOk);
+            this.mnuData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuDataEditVariables});
+            this.mnuData.Name = "mnuData";
+            this.mnuData.Size = new System.Drawing.Size(43, 20);
+            this.mnuData.Text = "&Data";
             // 
-            // diagSave
+            // mnuDataEditVariables
             // 
-            this.diagSave.Filter = "Datasheet Maker Datasheet Files (*.datasheetmakerdatasheet)|*.datasheetmakerdatas" +
-    "heet";
-            this.diagSave.FileOk += new System.ComponentModel.CancelEventHandler(this.diagSave_FileOk);
+            this.mnuDataEditVariables.Name = "mnuDataEditVariables";
+            this.mnuDataEditVariables.Size = new System.Drawing.Size(152, 22);
+            this.mnuDataEditVariables.Text = "&Edit Variables";
+            this.mnuDataEditVariables.Click += new System.EventHandler(this.mnuDataEditVariables_Click);
             // 
             // mnuHelp
             // 
@@ -134,6 +113,68 @@
             this.mnuHelpFormattingUnits.Size = new System.Drawing.Size(163, 22);
             this.mnuHelpFormattingUnits.Text = "Formatting &Units";
             this.mnuHelpFormattingUnits.Click += new System.EventHandler(this.mnuHelpFormattingUnits_Click);
+            // 
+            // dtaGrid
+            // 
+            this.dtaGrid.AllowUserToAddRows = false;
+            this.dtaGrid.AllowUserToDeleteRows = false;
+            this.dtaGrid.AllowUserToResizeRows = false;
+            this.dtaGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dtaGrid.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dtaGrid.Location = new System.Drawing.Point(0, 24);
+            this.dtaGrid.Name = "dtaGrid";
+            this.dtaGrid.RowHeadersVisible = false;
+            this.dtaGrid.Size = new System.Drawing.Size(616, 379);
+            this.dtaGrid.TabIndex = 1;
+            this.dtaGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellEndEdit);
+            this.dtaGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dtaGrid_CellFormatting);
+            this.dtaGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellValueChanged);
+            // 
+            // diagOpen
+            // 
+            this.diagOpen.Filter = "Datasheet Maker Sheet Files (*.datasheetmakerdatasheet)|*.datasheetmakerdatasheet" +
+    "";
+            this.diagOpen.FileOk += new System.ComponentModel.CancelEventHandler(this.diagOpen_FileOk);
+            // 
+            // diagSave
+            // 
+            this.diagSave.Filter = "Datasheet Maker Datasheet Files (*.datasheetmakerdatasheet)|*.datasheetmakerdatas" +
+    "heet";
+            this.diagSave.FileOk += new System.ComponentModel.CancelEventHandler(this.diagSave_FileOk);
+            // 
+            // mnuFileSeparator1
+            // 
+            this.mnuFileSeparator1.Name = "mnuFileSeparator1";
+            this.mnuFileSeparator1.Size = new System.Drawing.Size(149, 6);
+            // 
+            // mnuFileExport
+            // 
+            this.mnuFileExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileExportRawData,
+            this.mnuFileExportFormattedDatasheet});
+            this.mnuFileExport.Name = "mnuFileExport";
+            this.mnuFileExport.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileExport.Text = "E&xport";
+            this.mnuFileExport.Click += new System.EventHandler(this.mnuFileExport_Click);
+            // 
+            // mnuFileExportRawData
+            // 
+            this.mnuFileExportRawData.Name = "mnuFileExportRawData";
+            this.mnuFileExportRawData.Size = new System.Drawing.Size(184, 22);
+            this.mnuFileExportRawData.Text = "&Raw Data";
+            this.mnuFileExportRawData.Click += new System.EventHandler(this.mnuFileExportRawData_Click);
+            // 
+            // mnuFileExportFormattedDatasheet
+            // 
+            this.mnuFileExportFormattedDatasheet.Name = "mnuFileExportFormattedDatasheet";
+            this.mnuFileExportFormattedDatasheet.Size = new System.Drawing.Size(184, 22);
+            this.mnuFileExportFormattedDatasheet.Text = "&Formatted Datasheet";
+            this.mnuFileExportFormattedDatasheet.Click += new System.EventHandler(this.mnuFileExportFormattedDatasheet_Click);
+            // 
+            // diagExport
+            // 
+            this.diagExport.Filter = "Raw Data (*.csv)|*.csv|Formatted Data (*.csv)|*.csv";
+            this.diagExport.FileOk += new System.ComponentModel.CancelEventHandler(this.diagExport_FileOk);
             // 
             // MainForm
             // 
@@ -166,6 +207,11 @@
         private System.Windows.Forms.SaveFileDialog diagSave;
         private System.Windows.Forms.ToolStripMenuItem mnuHelp;
         private System.Windows.Forms.ToolStripMenuItem mnuHelpFormattingUnits;
+        private System.Windows.Forms.ToolStripSeparator mnuFileSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExport;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExportRawData;
+        private System.Windows.Forms.ToolStripMenuItem mnuFileExportFormattedDatasheet;
+        private System.Windows.Forms.SaveFileDialog diagExport;
     }
 }
 

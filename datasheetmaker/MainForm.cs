@@ -262,5 +262,104 @@ namespace datasheetmaker
                 }
             }
         }
+
+        private void mnuFileExport_Click(object sender, EventArgs e) {
+            diagExport.ShowDialog(this);
+        }
+
+        private void mnuFileExportRawData_Click(object sender, EventArgs e) {
+            diagExport.FilterIndex = 1;
+            diagExport.ShowDialog(this);
+        }
+
+        private void mnuFileExportFormattedDatasheet_Click(object sender, EventArgs e) {
+            diagExport.FilterIndex = 2;
+            diagExport.ShowDialog(this);
+        }
+
+        private void diagExport_FileOk(object sender, CancelEventArgs e) {
+            switch (diagExport.FilterIndex) {
+                case 1:
+                    // Raw Data
+                    File.WriteAllLines(
+                            diagExport.FileName,
+                            new[] {
+                                string.Join(
+                                        ",",
+                                        variables
+                                            .Select(
+                                                    variable =>
+                                                        variable.Units != "" ?
+                                                            $"{variable.Name} ({variable.Units})" :
+                                                            variable.Name
+                                                )
+                                    )
+                            }.Concat(
+                                Enumerable
+                                    .Range(0, dtaGrid.Rows.Count)
+                                    .Select(i => dtaGrid.Rows[i])
+                                    .Select(
+                                            row =>
+                                                string.Join(
+                                                        ",",
+                                                        row
+                                                            .Cells
+                                                            .Cast<DataGridViewCell>()
+                                                            .Select(
+                                                                    cell =>
+                                                                        NumberExpression.Parse(cell.Value.ToString())
+                                                                            .Value
+                                                                            .ToString()
+                                                                            ?? cell.Value.ToString()
+                                                                )
+                                                    )
+                                        )
+                                )
+                        );
+
+                    break;
+
+                case 2:
+                    // Formatted Data
+                    File.WriteAllLines(
+                            diagExport.FileName,
+                            new[] {
+                                string.Join(
+                                        ",",
+                                        variables.Select(variable =>variable.Name)
+                                    )
+                            }.Concat(
+                                Enumerable
+                                    .Range(0, dtaGrid.Rows.Count)
+                                    .Select(i => dtaGrid.Rows[i])
+                                    .Select(
+                                            row =>
+                                                string.Join(
+                                                        ",",
+                                                        row
+                                                            .Cells
+                                                            .Cast<DataGridViewCell>()
+                                                            .Select(
+                                                                    cell => {
+                                                                        var variable =
+                                                                            variables[cell.ColumnIndex];
+
+                                                                        if (variable.Type == VariableType.Dependent)
+                                                                            return cell.Value + " = " + variable.Expression.ToString();
+
+                                                                        return cell.Value;
+                                                                    }
+                                                                )
+                                                    )
+                                        )
+                                )
+                        );
+
+                    break;
+
+                default:
+                    throw new NotImplementedException();
+            }
+        }
     }
 }

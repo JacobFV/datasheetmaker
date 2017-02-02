@@ -20,6 +20,9 @@ namespace datasheetmaker
         static readonly char[] whitespace = " \t\n\r\f\v".ToCharArray();
         static readonly char[] variablenamechars = "^-+1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM._".ToCharArray();
 
+        public static NumberExpression Parse(string src) =>
+            Parse(ref src);
+
         public static NumberExpression Parse(ref string src) {
             var digits_i = 0;
             var sign = 1;
@@ -68,5 +71,8 @@ namespace datasheetmaker
                 Units = units
             };
         }
+
+        public override string ToString() =>
+            $"{Value} {Units}";
     }
 }

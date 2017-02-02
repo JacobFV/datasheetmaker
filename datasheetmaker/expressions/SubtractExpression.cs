@@ -23,5 +23,8 @@ namespace datasheetmaker
 
             return left;
         }
+
+        public override string ToString() =>
+            $"{Left}-{Right}";
     }
 }
