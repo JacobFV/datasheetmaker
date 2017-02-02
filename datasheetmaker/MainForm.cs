@@ -141,7 +141,7 @@ namespace datasheetmaker
 
                 var xdatasheet =
                     file.Element("datasheet");
-                
+
                 variables.Clear();
 
                 foreach (var xvariable in xdatasheet.Element("variables").Elements("variable")) {
@@ -160,6 +160,18 @@ namespace datasheetmaker
                 }
 
                 SetupNewVariables();
+
+                foreach (var xmeasurement in xdatasheet.Element("measurements").Elements("variable")) {
+                    var name = xmeasurement.Attribute("name").Value;
+                    var i = variables.Select((dt, j) => new { dt, j }).Where(k => k.dt.Name == name).First().j;
+
+                    foreach(var xvalue in xmeasurement.Elements("value")) {
+                        var j = int.Parse(xvalue.Attribute("i").Value);
+                        var row = dtaGrid.Rows[j];
+
+                        row.Cells[i].Value = xvalue.Value;
+                    }
+                }
             }
         }
 
@@ -186,7 +198,28 @@ namespace datasheetmaker
                 file.WriteEndElement();
 
                 file.WriteStartElement("measurements");
+                for (int i = 0; i < variables.Count; i++) {
+                    var variable =
+                        variables[i];
 
+                    if (variable.Type == VariableType.Independent) {
+                        file.WriteStartElement("variable");
+                        file.WriteAttributeString("name", variable.Name);
+
+                        for (int j = 0; j < dtaGrid.Rows.Count; j++) {
+                            var row = dtaGrid.Rows[j];
+
+                            var cellvalue = row.Cells[i].Value.ToString();
+
+                            file.WriteStartElement("value");
+                            file.WriteAttributeString("i", j.ToString());
+                            file.WriteValue(cellvalue);
+                            file.WriteEndElement();
+                        }
+
+                        file.WriteEndElement();
+                    }
+                }
                 file.WriteEndElement();
 
                 file.WriteEndElement();
