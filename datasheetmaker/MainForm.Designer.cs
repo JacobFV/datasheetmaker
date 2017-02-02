@@ -80,6 +80,7 @@
             // 
             this.dtaGrid.AllowUserToAddRows = false;
             this.dtaGrid.AllowUserToDeleteRows = false;
+            this.dtaGrid.AllowUserToResizeRows = false;
             this.dtaGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtaGrid.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dtaGrid.Location = new System.Drawing.Point(0, 24);

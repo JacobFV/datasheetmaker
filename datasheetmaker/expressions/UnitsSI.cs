@@ -8,14 +8,17 @@ namespace datasheetmaker
 {
     public sealed class UnitsSI : IEquatable<UnitsSI>
     {
-        readonly KeyValuePair<string, int>[] unitdegrees;
+        readonly KeyValuePair<string, Tuple<int, int>>[] unitdegrees;
 
-        public KeyValuePair<string, int>[] UnitDegrees {
+        // (unit, [base10exponent, unitexponent])
+
+        public KeyValuePair<string, Tuple<int, int>>[] UnitDegrees {
             get { return unitdegrees; }
         }
 
-        public UnitsSI(params KeyValuePair<string, int>[] unitdegrees) {
-            this.unitdegrees = unitdegrees.Where(_ => _.Value != 0).ToArray();
+        public UnitsSI(params KeyValuePair<string, Tuple<int, int>>[] unitdegrees) {
+            //TODO: this doesn't handle when units should be multiplied or divided by exponents of ten
+            this.unitdegrees = unitdegrees.Where(_ => _.Value.Item1 != 0 && _.Value.Item2 != 0).ToArray();
         }
 
         public UnitsSI Recipricol() =>
@@ -23,9 +26,12 @@ namespace datasheetmaker
                     unitdegrees
                         .Select(
                                 unitdegree =>
-                                    new KeyValuePair<string, int>(
+                                    new KeyValuePair<string, Tuple<int, int>>(
                                             unitdegree.Key,
-                                            -unitdegree.Value
+                                            new Tuple<int, int>(
+                                                    -unitdegree.Value.Item1,
+                                                    -unitdegree.Value.Item2
+                                                )
                                         )
                             )
                         .ToArray()
@@ -38,10 +44,14 @@ namespace datasheetmaker
                         .Concat(factor.unitdegrees.Select(_ => _.Key))
                         .Select(
                                 unit =>
-                                    new KeyValuePair<string, int>(
+                                    new KeyValuePair<string, Tuple<int, int>>(
                                             unit,
-                                            factor.unitdegrees.Where(_ => _.Key == unit).Sum(_ => _.Value) +
-                                                unitdegrees.Where(_ => _.Key == unit).Sum(_ => _.Value)
+                                            new Tuple<int, int>(
+                                                    factor.unitdegrees.Where(_ => _.Key == unit).Sum(_ => _.Value.Item1) +
+                                                        unitdegrees.Where(_ => _.Key == unit).Sum(_ => _.Value.Item1),
+                                                    factor.unitdegrees.Where(_ => _.Key == unit).Sum(_ => _.Value.Item2) +
+                                                        unitdegrees.Where(_ => _.Key == unit).Sum(_ => _.Value.Item2)
+                                                )
                                         )
                             )
                         .ToArray()
@@ -63,15 +73,30 @@ namespace datasheetmaker
                         .Split(new char[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries)
                         .Select(
                                 factor => {
-                                    var unit = factor.Last().ToString();
-                                    var degree = 1;
+                                    var splt =
+                                        factor.Split('^');
 
-                                    if (factor.Length != 1)
-                                        degree = prefix_degrees[factor.First()];
+                                    var unit = splt[0];
+                                    var base10degree = 1;
+                                    var unitdegree = 1;
 
-                                    return new KeyValuePair<string, int>(
+                                    if (unit.Length != 1) {
+                                        var p = unit[0];
+
+                                        if (prefix_degrees.TryGetValue(p, out base10degree))
+                                            unit = unit.Substring(1);
+                                        else base10degree = 1;
+                                    }
+
+                                    if (splt.Length > 1)
+                                        unitdegree = int.Parse(splt[1]);
+
+                                    return new KeyValuePair<string, Tuple<int, int>>(
                                             unit,
-                                            degree
+                                            new Tuple<int, int>(
+                                                    base10degree,
+                                                    unitdegree
+                                                )
                                         );
                                 }
                             )
@@ -84,10 +109,14 @@ namespace datasheetmaker
                     unitdegrees
                         .OrderBy(kvp => kvp.Key)
                         .Select(
-                                kvp => 
-                                    kvp.Value == 1 ?
-                                        kvp.Key :
-                                        $"{kvp.Key}^{kvp.Value}"
+                                kvp =>
+                                    kvp.Value.Item2 == 1 ?
+                                        kvp.Value.Item1 == 0 ?
+                                            kvp.Key :
+                                            $"{prefix_degrees.FirstOrDefault(_ => _.Value == kvp.Value.Item1).Key}{kvp.Key}" :
+                                        kvp.Value.Item1 == 0 ?
+                                            $"{kvp.Key}^{kvp.Value.Item2}" :
+                                            $"{prefix_degrees.FirstOrDefault(_ => _.Value == kvp.Value.Item1).Key}{kvp.Key}^{kvp.Value.Item2}"
                             )
                 );
 
@@ -98,7 +127,8 @@ namespace datasheetmaker
                         (acc, kvp) =>
                             acc ^
                                 kvp.Key.GetHashCode() ^
-                                kvp.Value
+                                kvp.Value.Item1 ^
+                                kvp.Value.Item2
                     );
 
         public override bool Equals(object obj) =>
