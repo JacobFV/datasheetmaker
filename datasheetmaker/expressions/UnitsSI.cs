@@ -80,7 +80,7 @@ namespace datasheetmaker
 
         public override string ToString() =>
             string.Join(
-                    " ",
+                    ".",
                     unitdegrees
                         .OrderBy(kvp => kvp.Key)
                         .Select(

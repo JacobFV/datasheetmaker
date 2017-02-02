@@ -20,10 +20,27 @@ namespace datasheetmaker
         public BindingList<string> Values { get; } =
             new BindingList<string>();
 
+        IExpression expression;
+        public IExpression Expression {
+            get { return expression; }
+            set {
+                expression = value;
+                Equation = expression.ToString();
+            }
+        }
+
+        string equation;
+
         /// <summary>
         /// For dependent values
         /// </summary>
-        public string Equation { get; set; }
+        public string Equation {
+            get { return equation; }
+            set {
+                equation = value;
+                expression = ExpressionParser.Parse(equation);
+            }
+        }
 
         public override string ToString() => Name;
     }

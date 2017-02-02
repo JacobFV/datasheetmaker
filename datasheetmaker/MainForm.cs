@@ -37,10 +37,12 @@ namespace datasheetmaker
 
             editorform.ShowDialog(this);
 
-            Setup();
+            SetupNewVariables();
         }
 
-        void Setup() {
+        void SetupNewVariables() {
+            variables = new BindingList<DataVariable>(variables.OrderBy(x => x.Type).ToList());
+
             dtaGrid.Rows.Clear();
             dtaGrid.Columns.Clear();
 
@@ -71,6 +73,7 @@ namespace datasheetmaker
                 column.Name = $"clm{variable.Name}";
                 column.HeaderText = $"{variable.Name} ({variable.Units})";
                 column.ReadOnly = variable.Type != VariableType.Independent;
+                column.Tag = variable;
             }
 
             var kvps =
@@ -147,13 +150,16 @@ namespace datasheetmaker
                     variable.Type = (VariableType)Enum.Parse(typeof(VariableType), xvariable.Attribute("type").Value);
                     variable.Units = xvariable.Attribute("units").Value;
 
+                    if (xvariable.Attribute("equation") != null)
+                        variable.Equation = xvariable.Attribute("equation").Value;
+
                     foreach (var xvalue in xvariable.Elements("value"))
                         variable.Values.Add(xvalue.Value);
 
                     variables.Add(variable);
                 }
 
-                Setup();
+                SetupNewVariables();
             }
         }
 
@@ -169,6 +175,9 @@ namespace datasheetmaker
                     file.WriteAttributeString("units", variable.Units);
                     file.WriteAttributeString("type", variable.Type.ToString());
 
+                    if (variable.Equation != "")
+                        file.WriteAttributeString("equation", variable.Equation);
+
                     foreach (var value in variable.Values)
                         file.WriteElementString("value", value);
 
@@ -182,6 +191,75 @@ namespace datasheetmaker
 
                 file.WriteEndElement();
                 file.WriteEndDocument();
+            }
+        }
+
+        private void dtaGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
+        }
+
+        private void dtaGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) {
+            var variable =
+                (DataVariable)dtaGrid.Columns[e.ColumnIndex].Tag;
+
+            if (variables[e.ColumnIndex].Units == "")
+                return;
+
+            var src = e.Value.ToString();
+
+            var number =
+                NumberExpression.Parse(ref src);
+
+            if (number?.Units.UnitDegrees.Length == 0) {
+                e.CellStyle.BackColor = Color.LightGray;
+
+                e.Value = e.Value.ToString() + " " + variable.Units;
+            }
+            else if (number == null || number.Units != UnitsSI.Parse(variable.Units)) {
+                e.CellStyle.BackColor = Color.Peru;
+            }
+            else {
+                e.CellStyle.BackColor = Color.White;
+            }
+
+            e.FormattingApplied = true;
+        }
+
+        private void mnuHelpFormattingUnits_Click(object sender, EventArgs e) {
+            MessageBox.Show(@"Use the period (.) to separate units like kg.m.s^-2\n(that's it)");
+        }
+
+        private void dtaGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
+            if (e.RowIndex == -1)
+                return;
+
+            var row = dtaGrid.Rows[e.RowIndex];
+
+            var boundvariables_values = new Dictionary<string, double>();
+            var boundvariables_units = new Dictionary<string, UnitsSI>();
+
+            for (var i = 0; i < dtaGrid.ColumnCount; i++) {
+                var variable =
+                    (DataVariable)dtaGrid.Columns[i].Tag;
+
+                var cell =
+                    row.Cells[i].Value.ToString();
+
+                if (variable.Type == VariableType.Dependent) {
+                    try {
+                        var value = variable.Expression.Evaluate(boundvariables_values);
+                        var units = variable.Expression.FindUnits(boundvariables_units);
+
+                        row.Cells[i].Value = value + " " + units.ToString();
+                    }
+                    catch (KeyNotFoundException) {
+                    }
+                }
+
+                var numexp = NumberExpression.Parse(ref cell);
+                if (numexp != null) {
+                    boundvariables_values.Add(variable.Name, numexp.Value);
+                    boundvariables_units.Add(variable.Name, numexp.Units);
+                }
             }
         }
     }

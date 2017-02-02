@@ -34,6 +34,7 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
+            this.cboType = new System.Windows.Forms.ComboBox();
             this.tabSettings = new System.Windows.Forms.TabControl();
             this.tabDependent = new System.Windows.Forms.TabPage();
             this.txtEquation = new System.Windows.Forms.TextBox();
@@ -42,10 +43,9 @@
             this.btnDeleteIndependentValue = new System.Windows.Forms.Button();
             this.btnAddIndependentValue = new System.Windows.Forms.Button();
             this.lstIndependentValues = new System.Windows.Forms.ListBox();
+            this.tabIndependent = new System.Windows.Forms.TabPage();
             this.txtUnits = new System.Windows.Forms.TextBox();
             this.txtName = new System.Windows.Forms.TextBox();
-            this.tabIndependent = new System.Windows.Forms.TabPage();
-            this.cboType = new System.Windows.Forms.ComboBox();
             lblName = new System.Windows.Forms.Label();
             lblEquation = new System.Windows.Forms.Label();
             lblIndependentValues = new System.Windows.Forms.Label();
@@ -97,6 +97,15 @@
             lblUnits.TabIndex = 1;
             lblUnits.Text = "Units:";
             lblUnits.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblType
+            // 
+            lblType.Location = new System.Drawing.Point(14, 64);
+            lblType.Name = "lblType";
+            lblType.Size = new System.Drawing.Size(57, 20);
+            lblType.TabIndex = 1;
+            lblType.Text = "Type:";
+            lblType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lstVariables
             // 
@@ -157,6 +166,20 @@
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
+            // cboType
+            // 
+            this.cboType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboType.FormattingEnabled = true;
+            this.cboType.Items.AddRange(new object[] {
+            "Dimensional",
+            "Independent",
+            "Dependent"});
+            this.cboType.Location = new System.Drawing.Point(77, 64);
+            this.cboType.Name = "cboType";
+            this.cboType.Size = new System.Drawing.Size(191, 21);
+            this.cboType.TabIndex = 5;
+            this.cboType.SelectedIndexChanged += new System.EventHandler(this.cboType_SelectedIndexChanged);
+            // 
             // tabSettings
             // 
             this.tabSettings.Alignment = System.Windows.Forms.TabAlignment.Bottom;
@@ -180,7 +203,7 @@
             this.tabDependent.Location = new System.Drawing.Point(4, 4);
             this.tabDependent.Name = "tabDependent";
             this.tabDependent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDependent.Size = new System.Drawing.Size(269, 218);
+            this.tabDependent.Size = new System.Drawing.Size(269, 227);
             this.tabDependent.TabIndex = 0;
             this.tabDependent.Text = "Dependent";
             this.tabDependent.UseVisualStyleBackColor = true;
@@ -196,6 +219,7 @@
             this.txtEquation.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.txtEquation.Size = new System.Drawing.Size(251, 184);
             this.txtEquation.TabIndex = 3;
+            this.txtEquation.TextChanged += new System.EventHandler(this.txtEquation_TextChanged);
             // 
             // tabDimensional
             // 
@@ -256,6 +280,16 @@
             this.lstIndependentValues.TabIndex = 0;
             this.lstIndependentValues.SelectedIndexChanged += new System.EventHandler(this.lstIndependentValues_SelectedIndexChanged);
             // 
+            // tabIndependent
+            // 
+            this.tabIndependent.Location = new System.Drawing.Point(4, 4);
+            this.tabIndependent.Name = "tabIndependent";
+            this.tabIndependent.Padding = new System.Windows.Forms.Padding(3);
+            this.tabIndependent.Size = new System.Drawing.Size(269, 227);
+            this.tabIndependent.TabIndex = 2;
+            this.tabIndependent.Text = "Independent";
+            this.tabIndependent.UseVisualStyleBackColor = true;
+            // 
             // txtUnits
             // 
             this.txtUnits.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -275,39 +309,6 @@
             this.txtName.Size = new System.Drawing.Size(191, 20);
             this.txtName.TabIndex = 0;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
-            // 
-            // tabIndependent
-            // 
-            this.tabIndependent.Location = new System.Drawing.Point(4, 4);
-            this.tabIndependent.Name = "tabIndependent";
-            this.tabIndependent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabIndependent.Size = new System.Drawing.Size(269, 227);
-            this.tabIndependent.TabIndex = 2;
-            this.tabIndependent.Text = "Independent";
-            this.tabIndependent.UseVisualStyleBackColor = true;
-            // 
-            // cboType
-            // 
-            this.cboType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboType.FormattingEnabled = true;
-            this.cboType.Items.AddRange(new object[] {
-            "Dimensional",
-            "Independent",
-            "Dependent"});
-            this.cboType.Location = new System.Drawing.Point(77, 64);
-            this.cboType.Name = "cboType";
-            this.cboType.Size = new System.Drawing.Size(191, 21);
-            this.cboType.TabIndex = 5;
-            this.cboType.SelectedIndexChanged += new System.EventHandler(this.cboType_SelectedIndexChanged);
-            // 
-            // lblType
-            // 
-            lblType.Location = new System.Drawing.Point(14, 64);
-            lblType.Name = "lblType";
-            lblType.Size = new System.Drawing.Size(57, 20);
-            lblType.TabIndex = 1;
-            lblType.Text = "Type:";
-            lblType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // VariableEditorForm
             // 

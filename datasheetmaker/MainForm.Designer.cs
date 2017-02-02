@@ -34,6 +34,8 @@
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
             this.diagOpen = new System.Windows.Forms.OpenFileDialog();
             this.diagSave = new System.Windows.Forms.SaveFileDialog();
+            this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuHelpFormattingUnits = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtaGrid)).BeginInit();
             this.SuspendLayout();
@@ -42,7 +44,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.mnuFile,
-            this.mnuData});
+            this.mnuData,
+            this.mnuHelp});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(616, 24);
@@ -84,6 +87,9 @@
             this.dtaGrid.RowHeadersVisible = false;
             this.dtaGrid.Size = new System.Drawing.Size(616, 379);
             this.dtaGrid.TabIndex = 1;
+            this.dtaGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellEndEdit);
+            this.dtaGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dtaGrid_CellFormatting);
+            this.dtaGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellValueChanged);
             // 
             // mnuFileOpen
             // 
@@ -112,6 +118,21 @@
             this.diagSave.Filter = "Datasheet Maker Datasheet Files (*.datasheetmakerdatasheet)|*.datasheetmakerdatas" +
     "heet";
             this.diagSave.FileOk += new System.ComponentModel.CancelEventHandler(this.diagSave_FileOk);
+            // 
+            // mnuHelp
+            // 
+            this.mnuHelp.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuHelpFormattingUnits});
+            this.mnuHelp.Name = "mnuHelp";
+            this.mnuHelp.Size = new System.Drawing.Size(44, 20);
+            this.mnuHelp.Text = "&Help";
+            // 
+            // mnuHelpFormattingUnits
+            // 
+            this.mnuHelpFormattingUnits.Name = "mnuHelpFormattingUnits";
+            this.mnuHelpFormattingUnits.Size = new System.Drawing.Size(163, 22);
+            this.mnuHelpFormattingUnits.Text = "Formatting &Units";
+            this.mnuHelpFormattingUnits.Click += new System.EventHandler(this.mnuHelpFormattingUnits_Click);
             // 
             // MainForm
             // 
@@ -142,6 +163,8 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFileSave;
         private System.Windows.Forms.OpenFileDialog diagOpen;
         private System.Windows.Forms.SaveFileDialog diagSave;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelp;
+        private System.Windows.Forms.ToolStripMenuItem mnuHelpFormattingUnits;
     }
 }
 

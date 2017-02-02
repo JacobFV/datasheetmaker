@@ -101,5 +101,9 @@ namespace datasheetmaker
                 txtIndependentValue.Text = SelectedVariable.Values[lstIndependentValues.SelectedIndex];
             }
         }
+
+        private void txtEquation_TextChanged(object sender, EventArgs e) {
+            SelectedVariable.Equation = txtEquation.Text;
+        }
     }
 }
