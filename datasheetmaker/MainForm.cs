@@ -73,6 +73,9 @@ namespace datasheetmaker
                 column.Tag = variable;
             }
 
+            if (variables.Count == 0)
+                return;
+
             var kvps =
                 dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
 

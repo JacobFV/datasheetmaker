@@ -41,6 +41,8 @@ namespace datasheetmaker
 
         private void btnAdd_Click(object sender, EventArgs e) {
             Variables.Add(new DataVariable { Name = "abc" });
+            lstVariables.SelectedIndex = Variables.Count - 1;
+            lstVariables_SelectedIndexChanged(null, null);
         }
 
         private void btnDelete_Click(object sender, EventArgs e) {
@@ -60,7 +62,7 @@ namespace datasheetmaker
 
         private void cboType_SelectedIndexChanged(object sender, EventArgs e) {
             SelectedVariable.Type = (VariableType)cboType.SelectedIndex;
-            
+
             switch (SelectedVariable.Type) {
                 case VariableType.Dimensional:
                     tabSettings.SelectTab(tabDimensional);

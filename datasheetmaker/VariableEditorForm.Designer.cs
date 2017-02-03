@@ -71,8 +71,8 @@
             lblName.Location = new System.Drawing.Point(14, 12);
             lblName.Name = "lblName";
             lblName.Size = new System.Drawing.Size(57, 20);
-            lblName.TabIndex = 1;
-            lblName.Text = "Name:";
+            lblName.TabIndex = 9;
+            lblName.Text = "&Name:";
             lblName.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblEquation
@@ -80,8 +80,8 @@
             lblEquation.Location = new System.Drawing.Point(7, 5);
             lblEquation.Name = "lblEquation";
             lblEquation.Size = new System.Drawing.Size(57, 20);
-            lblEquation.TabIndex = 1;
-            lblEquation.Text = "Equation:";
+            lblEquation.TabIndex = 39;
+            lblEquation.Text = "E&quation:";
             lblEquation.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblIndependentValues
@@ -91,8 +91,8 @@
             lblIndependentValues.Location = new System.Drawing.Point(10, 6);
             lblIndependentValues.Name = "lblIndependentValues";
             lblIndependentValues.Size = new System.Drawing.Size(80, 27);
-            lblIndependentValues.TabIndex = 1;
-            lblIndependentValues.Text = "Values:";
+            lblIndependentValues.TabIndex = 39;
+            lblIndependentValues.Text = "&Values:";
             lblIndependentValues.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblUnits
@@ -100,8 +100,8 @@
             lblUnits.Location = new System.Drawing.Point(14, 38);
             lblUnits.Name = "lblUnits";
             lblUnits.Size = new System.Drawing.Size(57, 20);
-            lblUnits.TabIndex = 1;
-            lblUnits.Text = "Units:";
+            lblUnits.TabIndex = 19;
+            lblUnits.Text = "&Units:";
             lblUnits.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lblType
@@ -109,8 +109,8 @@
             lblType.Location = new System.Drawing.Point(14, 64);
             lblType.Name = "lblType";
             lblType.Size = new System.Drawing.Size(57, 20);
-            lblType.TabIndex = 1;
-            lblType.Text = "Type:";
+            lblType.TabIndex = 29;
+            lblType.Text = "&Type:";
             lblType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // lstVariables
@@ -124,7 +124,7 @@
             this.lstVariables.Location = new System.Drawing.Point(3, 3);
             this.lstVariables.Name = "lstVariables";
             this.lstVariables.Size = new System.Drawing.Size(144, 296);
-            this.lstVariables.TabIndex = 0;
+            this.lstVariables.TabIndex = 1;
             this.lstVariables.SelectedIndexChanged += new System.EventHandler(this.lstVariables_SelectedIndexChanged);
             // 
             // mnuVariables
@@ -173,7 +173,7 @@
             this.splitContainer1.Panel2.Controls.Add(this.chkBehavesLikeTrials);
             this.splitContainer1.Size = new System.Drawing.Size(413, 330);
             this.splitContainer1.SplitterDistance = 150;
-            this.splitContainer1.TabIndex = 1;
+            this.splitContainer1.TabIndex = 100;
             // 
             // btnDelete
             // 
@@ -181,8 +181,8 @@
             this.btnDelete.Location = new System.Drawing.Point(97, 300);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(50, 27);
-            this.btnDelete.TabIndex = 1;
-            this.btnDelete.Text = "Delete";
+            this.btnDelete.TabIndex = 5;
+            this.btnDelete.Text = "D&elete";
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
@@ -192,8 +192,8 @@
             this.btnAdd.Location = new System.Drawing.Point(41, 300);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(50, 27);
-            this.btnAdd.TabIndex = 0;
-            this.btnAdd.Text = "Add";
+            this.btnAdd.TabIndex = 4;
+            this.btnAdd.Text = "&Add";
             this.btnAdd.UseVisualStyleBackColor = true;
             this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
@@ -210,7 +210,7 @@
             this.cboType.Location = new System.Drawing.Point(77, 64);
             this.cboType.Name = "cboType";
             this.cboType.Size = new System.Drawing.Size(170, 21);
-            this.cboType.TabIndex = 5;
+            this.cboType.TabIndex = 30;
             this.cboType.SelectedIndexChanged += new System.EventHandler(this.cboType_SelectedIndexChanged);
             // 
             // tabSettings
@@ -226,7 +226,7 @@
             this.tabSettings.Multiline = true;
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.SelectedIndex = 0;
-            this.tabSettings.Size = new System.Drawing.Size(256, 236);
+            this.tabSettings.Size = new System.Drawing.Size(256, 239);
             this.tabSettings.TabIndex = 4;
             // 
             // tabDependent
@@ -236,7 +236,7 @@
             this.tabDependent.Location = new System.Drawing.Point(4, 4);
             this.tabDependent.Name = "tabDependent";
             this.tabDependent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDependent.Size = new System.Drawing.Size(248, 210);
+            this.tabDependent.Size = new System.Drawing.Size(248, 213);
             this.tabDependent.TabIndex = 0;
             this.tabDependent.Text = "Dependent";
             this.tabDependent.UseVisualStyleBackColor = true;
@@ -250,12 +250,13 @@
             this.txtEquation.Multiline = true;
             this.txtEquation.Name = "txtEquation";
             this.txtEquation.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtEquation.Size = new System.Drawing.Size(230, 167);
-            this.txtEquation.TabIndex = 3;
+            this.txtEquation.Size = new System.Drawing.Size(230, 170);
+            this.txtEquation.TabIndex = 40;
             this.txtEquation.TextChanged += new System.EventHandler(this.txtEquation_TextChanged);
             // 
             // tabDimensional
             // 
+            this.tabDimensional.BackColor = System.Drawing.Color.Transparent;
             this.tabDimensional.Controls.Add(this.txtIndependentValue);
             this.tabDimensional.Controls.Add(this.btnDeleteIndependentValue);
             this.tabDimensional.Controls.Add(this.btnAddIndependentValue);
@@ -264,7 +265,7 @@
             this.tabDimensional.Location = new System.Drawing.Point(4, 4);
             this.tabDimensional.Name = "tabDimensional";
             this.tabDimensional.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDimensional.Size = new System.Drawing.Size(248, 210);
+            this.tabDimensional.Size = new System.Drawing.Size(248, 213);
             this.tabDimensional.TabIndex = 1;
             this.tabDimensional.Text = "Dimensional";
             this.tabDimensional.UseVisualStyleBackColor = true;
@@ -273,10 +274,10 @@
             // 
             this.txtIndependentValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtIndependentValue.Location = new System.Drawing.Point(10, 184);
+            this.txtIndependentValue.Location = new System.Drawing.Point(10, 187);
             this.txtIndependentValue.Name = "txtIndependentValue";
             this.txtIndependentValue.Size = new System.Drawing.Size(230, 20);
-            this.txtIndependentValue.TabIndex = 4;
+            this.txtIndependentValue.TabIndex = 43;
             this.txtIndependentValue.TextChanged += new System.EventHandler(this.txtIndependentValue_TextChanged);
             // 
             // btnDeleteIndependentValue
@@ -285,7 +286,7 @@
             this.btnDeleteIndependentValue.Location = new System.Drawing.Point(190, 6);
             this.btnDeleteIndependentValue.Name = "btnDeleteIndependentValue";
             this.btnDeleteIndependentValue.Size = new System.Drawing.Size(50, 27);
-            this.btnDeleteIndependentValue.TabIndex = 3;
+            this.btnDeleteIndependentValue.TabIndex = 41;
             this.btnDeleteIndependentValue.Text = "Delete";
             this.btnDeleteIndependentValue.UseVisualStyleBackColor = true;
             this.btnDeleteIndependentValue.Click += new System.EventHandler(this.btnDeleteIndependentValue_Click);
@@ -296,7 +297,7 @@
             this.btnAddIndependentValue.Location = new System.Drawing.Point(134, 6);
             this.btnAddIndependentValue.Name = "btnAddIndependentValue";
             this.btnAddIndependentValue.Size = new System.Drawing.Size(50, 27);
-            this.btnAddIndependentValue.TabIndex = 2;
+            this.btnAddIndependentValue.TabIndex = 40;
             this.btnAddIndependentValue.Text = "Add";
             this.btnAddIndependentValue.UseVisualStyleBackColor = true;
             this.btnAddIndependentValue.Click += new System.EventHandler(this.btnAddIndependentValue_Click);
@@ -310,8 +311,8 @@
             this.lstIndependentValues.IntegralHeight = false;
             this.lstIndependentValues.Location = new System.Drawing.Point(10, 37);
             this.lstIndependentValues.Name = "lstIndependentValues";
-            this.lstIndependentValues.Size = new System.Drawing.Size(230, 143);
-            this.lstIndependentValues.TabIndex = 0;
+            this.lstIndependentValues.Size = new System.Drawing.Size(230, 146);
+            this.lstIndependentValues.TabIndex = 42;
             this.lstIndependentValues.SelectedIndexChanged += new System.EventHandler(this.lstIndependentValues_SelectedIndexChanged);
             // 
             // tabIndependent
@@ -319,7 +320,7 @@
             this.tabIndependent.Location = new System.Drawing.Point(4, 4);
             this.tabIndependent.Name = "tabIndependent";
             this.tabIndependent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabIndependent.Size = new System.Drawing.Size(248, 210);
+            this.tabIndependent.Size = new System.Drawing.Size(248, 213);
             this.tabIndependent.TabIndex = 2;
             this.tabIndependent.Text = "Independent";
             this.tabIndependent.UseVisualStyleBackColor = true;
@@ -331,7 +332,7 @@
             this.txtUnits.Location = new System.Drawing.Point(77, 38);
             this.txtUnits.Name = "txtUnits";
             this.txtUnits.Size = new System.Drawing.Size(170, 20);
-            this.txtUnits.TabIndex = 0;
+            this.txtUnits.TabIndex = 20;
             this.txtUnits.TextChanged += new System.EventHandler(this.txtUnits_TextChanged);
             // 
             // txtName
@@ -341,7 +342,7 @@
             this.txtName.Location = new System.Drawing.Point(77, 12);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(170, 20);
-            this.txtName.TabIndex = 0;
+            this.txtName.TabIndex = 10;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
             // 
             // chkBehavesLikeTrials
@@ -351,7 +352,7 @@
             this.chkBehavesLikeTrials.Location = new System.Drawing.Point(77, 86);
             this.chkBehavesLikeTrials.Name = "chkBehavesLikeTrials";
             this.chkBehavesLikeTrials.Size = new System.Drawing.Size(170, 24);
-            this.chkBehavesLikeTrials.TabIndex = 6;
+            this.chkBehavesLikeTrials.TabIndex = 35;
             this.chkBehavesLikeTrials.Text = "Behaves like Trials";
             this.chkBehavesLikeTrials.UseVisualStyleBackColor = true;
             this.chkBehavesLikeTrials.CheckedChanged += new System.EventHandler(this.chkBehavesLikeTrials_CheckedChanged);
