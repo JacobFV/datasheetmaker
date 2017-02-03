@@ -187,11 +187,12 @@ namespace datasheetmaker
                             var collection_nums =
                                 collection
                                     .Select(
-                                            column =>
+                                            column => (
                                                 from x in column
                                                 let k = NumberExpression.Parse(x)
                                                 where k != null
                                                 select k.Value
+                                                ).ToArray()
                                         )
                                     .ToArray();
 
@@ -201,17 +202,25 @@ namespace datasheetmaker
                                 case "Ave":
                                 case "Mean":
                                     for (int m = 0; m < answers.Length; m++) {
-                                        answers[m] = collection_nums[m].Average().ToString();
+                                        try {
+                                            answers[m] = collection_nums[m].Average().ToString();
+                                        }
+                                        catch (InvalidOperationException) {
+                                        }
                                     }
 
                                     break;
 
                                 case "Median":
                                     for (int m = 0; m < answers.Length; m++) {
-                                        var list = collection_nums[m].ToList();
-                                        list.Sort();
+                                        try {
+                                            var list = collection_nums[m].ToList();
+                                            list.Sort();
 
-                                        answers[m] = list[list.Count / 2].ToString();
+                                            answers[m] = list[list.Count / 2].ToString();
+                                        }
+                                        catch (InvalidOperationException) {
+                                        }
                                     }
 
                                     break;
@@ -236,35 +245,55 @@ namespace datasheetmaker
 
                                 case "Range":
                                     for (int m = 0; m < answers.Length; m++) {
-                                        answers[m] = (collection_nums[m].Max() - collection_nums[m].Min()).ToString();
+                                        try {
+                                            answers[m] = (collection_nums[m].Max() - collection_nums[m].Min()).ToString();
+                                        }
+                                        catch (InvalidOperationException) {
+                                        }
                                     }
 
                                     break;
 
                                 case "Min":
                                     for (int m = 0; m < answers.Length; m++) {
-                                        answers[m] = collection_nums[m].Min().ToString();
+                                        try {
+                                            answers[m] = collection_nums[m].Min().ToString();
+                                        }
+                                        catch (InvalidOperationException) {
+                                        }
                                     }
 
                                     break;
 
                                 case "Max":
                                     for (int m = 0; m < answers.Length; m++) {
-                                        answers[m] = collection_nums[m].Max().ToString();
+                                        try {
+                                            answers[m] = collection_nums[m].Max().ToString();
+                                        }
+                                        catch (InvalidOperationException) {
+                                        }
                                     }
 
                                     break;
 
                                 case "Mid":
                                     for (int m = 0; m < answers.Length; m++) {
-                                        answers[m] = ((collection_nums[m].Max() + collection_nums[m].Min()) / 2f).ToString();
+                                        try {
+                                            answers[m] = ((collection_nums[m].Max() + collection_nums[m].Min()) / 2f).ToString();
+                                        }
+                                        catch (InvalidOperationException) {
+                                        }
                                     }
 
                                     break;
 
                                 case "StdDev":
                                     for (int m = 0; m < answers.Length; m++) {
-                                        answers[m] = collection_nums[m].StandardDeviation().ToString();
+                                        try {
+                                            answers[m] = collection_nums[m].StandardDeviation().ToString();
+                                        }
+                                        catch (InvalidOperationException) {
+                                        }
                                     }
 
                                     break;
@@ -323,7 +352,10 @@ namespace datasheetmaker
                     variable.Name = xvariable.Attribute("name").Value;
                     variable.Type = (VariableType)Enum.Parse(typeof(VariableType), xvariable.Attribute("type").Value);
                     variable.Units = xvariable.Attribute("units").Value;
-                    variable.BehavesLikeTrials = bool.Parse(xvariable.Attribute("behaves-like-trial").Value);
+                    variable.BehavesLikeTrials =
+                        xvariable.Attribute("behaves-like-trial") != null ?
+                            bool.Parse(xvariable.Attribute("behaves-like-trial").Value) :
+                            false;
 
                     if (xvariable.Attribute("equation") != null)
                         variable.Equation = xvariable.Attribute("equation").Value;
@@ -336,17 +368,21 @@ namespace datasheetmaker
 
                 SetupNewVariables();
 
+                dtaGrid.Enabled = false;
+
                 foreach (var xmeasurement in xdatasheet.Element("measurements").Elements("variable")) {
                     var name = xmeasurement.Attribute("name").Value;
                     var i = variables.Select((dt, j) => new { dt, j }).Where(k => k.dt.Name == name).First().j;
 
-                    foreach(var xvalue in xmeasurement.Elements("value")) {
+                    foreach (var xvalue in xmeasurement.Elements("value")) {
                         var j = int.Parse(xvalue.Attribute("i").Value);
                         var row = dtaGrid.Rows[j];
 
                         row.Cells[i].Value = xvalue.Value;
                     }
                 }
+
+                dtaGrid.Enabled = true;
             }
         }
 
