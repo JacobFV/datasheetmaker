@@ -36,6 +36,7 @@ namespace datasheetmaker
                 cboType.SelectedIndex = (int)SelectedVariable.Type;
                 lstIndependentValues.DataSource = SelectedVariable.Values;
                 chkBehavesLikeTrials.Checked = SelectedVariable.BehavesLikeTrials;
+                txtEquation.Text = SelectedVariable.Equation;
             }
         }
 
