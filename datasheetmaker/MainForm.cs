@@ -116,7 +116,13 @@ namespace datasheetmaker
             }
         }
 
+        bool updatingaverages = false;
         void UpdateAverages() {
+            if (updatingaverages)
+                return;
+
+            updatingaverages = true;
+
             var dimensions =
                 variables.Where(_ => _.Type == VariableType.Dimensional).ToArray();
 
@@ -309,6 +315,8 @@ namespace datasheetmaker
 
                 i++;
             }
+
+            updatingaverages = false;
         }
 
         IEnumerable<int> RangeInts(int start, int skip, int times) {
@@ -368,7 +376,7 @@ namespace datasheetmaker
 
                 SetupNewVariables();
 
-                dtaGrid.Enabled = false;
+                updatingaverages = true;
 
                 foreach (var xmeasurement in xdatasheet.Element("measurements").Elements("variable")) {
                     var name = xmeasurement.Attribute("name").Value;
@@ -382,7 +390,7 @@ namespace datasheetmaker
                     }
                 }
 
-                dtaGrid.Enabled = true;
+                updatingaverages = false;
             }
         }
 
