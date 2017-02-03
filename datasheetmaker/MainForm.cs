@@ -320,6 +320,7 @@ namespace datasheetmaker
                     variable.Name = xvariable.Attribute("name").Value;
                     variable.Type = (VariableType)Enum.Parse(typeof(VariableType), xvariable.Attribute("type").Value);
                     variable.Units = xvariable.Attribute("units").Value;
+                    variable.BehavesLikeTrials = bool.Parse(xvariable.Attribute("behaves-like-trial").Value);
 
                     if (xvariable.Attribute("equation") != null)
                         variable.Equation = xvariable.Attribute("equation").Value;
@@ -357,6 +358,7 @@ namespace datasheetmaker
                     file.WriteAttributeString("name", variable.Name);
                     file.WriteAttributeString("units", variable.Units);
                     file.WriteAttributeString("type", variable.Type.ToString());
+                    file.WriteAttributeString("behaves-like-trial", variable.BehavesLikeTrials.ToString());
 
                     if (variable.Equation != "")
                         file.WriteAttributeString("equation", variable.Equation);
