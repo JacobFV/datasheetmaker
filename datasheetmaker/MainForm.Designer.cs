@@ -126,7 +126,6 @@
             this.dtaGrid.RowHeadersVisible = false;
             this.dtaGrid.Size = new System.Drawing.Size(616, 379);
             this.dtaGrid.TabIndex = 1;
-            this.dtaGrid.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellEndEdit);
             this.dtaGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dtaGrid_CellFormatting);
             this.dtaGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellValueChanged);
             // 

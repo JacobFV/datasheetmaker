@@ -56,6 +56,7 @@
     <Compile Include="expressions\IExpression.cs" />
     <Compile Include="expressions\UnitsSI.cs" />
     <Compile Include="expressions\VariableExpression.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>

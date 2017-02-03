@@ -34,6 +34,8 @@ namespace datasheetmaker
                 txtName.Text = SelectedVariable.Name;
                 txtUnits.Text = SelectedVariable.Units;
                 cboType.SelectedIndex = (int)SelectedVariable.Type;
+                lstIndependentValues.DataSource = SelectedVariable.Values;
+                chkBehavesLikeTrials.Checked = SelectedVariable.BehavesLikeTrials;
             }
         }
 
@@ -49,6 +51,7 @@ namespace datasheetmaker
 
         private void txtName_TextChanged(object sender, EventArgs e) {
             SelectedVariable.Name = txtName.Text;
+            Variables.ResetItem(lstVariables.SelectedIndex);
         }
 
         private void txtUnits_TextChanged(object sender, EventArgs e) {
@@ -57,17 +60,21 @@ namespace datasheetmaker
 
         private void cboType_SelectedIndexChanged(object sender, EventArgs e) {
             SelectedVariable.Type = (VariableType)cboType.SelectedIndex;
-
+            
             switch (SelectedVariable.Type) {
                 case VariableType.Dimensional:
                     tabSettings.SelectTab(tabDimensional);
 
                     lstIndependentValues.DataSource = SelectedVariable.Values;
 
+                    chkBehavesLikeTrials.Visible = true;
+
                     break;
 
                 case VariableType.Independent:
                     tabSettings.SelectTab(tabIndependent);
+
+                    chkBehavesLikeTrials.Visible = false;
 
                     break;
 
@@ -75,6 +82,8 @@ namespace datasheetmaker
                     tabSettings.SelectTab(tabDependent);
 
                     txtEquation.Text = SelectedVariable.Equation;
+
+                    chkBehavesLikeTrials.Visible = false;
 
                     break;
             }
@@ -104,6 +113,41 @@ namespace datasheetmaker
 
         private void txtEquation_TextChanged(object sender, EventArgs e) {
             SelectedVariable.Equation = txtEquation.Text;
+        }
+
+        private void mnuVariablesMoveUp_Click(object sender, EventArgs e) {
+            if (lstVariables.SelectedIndex <= 0)
+                return;
+
+            var tmp = Variables[lstVariables.SelectedIndex - 1];
+            Variables[lstVariables.SelectedIndex - 1] = Variables[lstVariables.SelectedIndex];
+            Variables[lstVariables.SelectedIndex] = tmp;
+
+            lstVariables.SelectedIndex--;
+        }
+
+        private void mnuVariablesMoveDown_Click(object sender, EventArgs e) {
+            if (lstVariables.SelectedIndex == -1 ||
+                lstVariables.SelectedIndex + 1 >= Variables.Count)
+                return;
+
+            var tmp = Variables[lstVariables.SelectedIndex + 1];
+            Variables[lstVariables.SelectedIndex + 1] = Variables[lstVariables.SelectedIndex];
+            Variables[lstVariables.SelectedIndex] = tmp;
+
+            lstVariables.SelectedIndex++;
+        }
+
+        private void chkBehavesLikeTrials_VisibleChanged(object sender, EventArgs e) {
+            if (chkBehavesLikeTrials.Visible)
+                tabSettings.Top += chkBehavesLikeTrials.Height;
+            else {
+                tabSettings.Top -= chkBehavesLikeTrials.Height;
+            }
+        }
+
+        private void chkBehavesLikeTrials_CheckedChanged(object sender, EventArgs e) {
+            SelectedVariable.BehavesLikeTrials = chkBehavesLikeTrials.Checked;
         }
     }
 }

@@ -21,12 +21,6 @@ namespace datasheetmaker
 
         public MainForm() {
             InitializeComponent();
-
-            //ExpressionParser.Parse("1");
-            //ExpressionParser.Parse("4cm*2km");
-            //ExpressionParser.Parse("1+3");
-
-            variables.Add(new DataVariable { Name = "abc" });
         }
 
         private void mnuDataEditVariables_Click(object sender, EventArgs e) {
@@ -71,7 +65,10 @@ namespace datasheetmaker
                 //}
 
                 column.Name = $"clm{variable.Name}";
-                column.HeaderText = $"{variable.Name} ({variable.Units})";
+                column.HeaderText =
+                    variable.Units != "" ?
+                        $"{variable.Name} ({variable.Units})" :
+                        variable.Name;
                 column.ReadOnly = variable.Type != VariableType.Independent;
                 column.Tag = variable;
             }
@@ -113,6 +110,180 @@ namespace datasheetmaker
                     cell.ReadOnly = true;
                     cell.ToolTipText = calculation.Name;
                 }
+            }
+        }
+
+        void UpdateAverages() {
+            var dimensions =
+                variables.Where(_ => _.Type == VariableType.Dimensional).ToArray();
+
+            var measurements =
+                variables.Where(_ => _.Type == VariableType.Independent).ToArray();
+
+            var calculations =
+                variables.Where(_ => _.Type == VariableType.Dependent).ToArray();
+
+            var kvps =
+                dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
+            
+            var i = 0;
+            foreach (var ordinates in Combinations(kvps)) {
+                for (var j = ordinates.Length - 1; j >= 0 ; j--) {
+                    var ordinate = ordinates[j];
+
+                    if (ordinate.Key.BehavesLikeTrials) {
+                        bool shouldcollectvalues = false;
+
+                        switch (ordinate.Value) {
+                            case "Ave":
+                            case "Mean":
+                            case "Median":
+                            case "Mode":
+                            case "Range":
+                            case "Max":
+                            case "Min":
+                            case "Mid":
+                            case "StdDev":
+                                shouldcollectvalues = true;
+                                break;
+
+                            default:
+                                shouldcollectvalues = false;
+                                break;
+                        }
+
+                        if (shouldcollectvalues) {
+                            var k_skip =
+                                j + 1 != ordinates.Length ?
+                                    Combinations(kvps.Skip(j + 1).ToArray()).Count() :
+                                    1;
+                            var k_times = ordinate.Key.Values.Count(_ => _.Any(char.IsDigit));
+                            var k_start = i - k_skip * k_times;
+
+                            var collection =
+                                Combinations(
+                                        RangeInts(k_start, k_skip, k_times)
+                                            .Select(
+                                                    k =>
+                                                        dtaGrid
+                                                            .Rows[k]
+                                                            .Cells
+                                                            .Cast<DataGridViewCell>()
+                                                            .Skip(dimensions.Length)
+                                                            .Select(
+                                                                    cell =>
+                                                                        NumberExpression.Parse(cell.Value.ToString())?.Value.ToString() ??
+                                                                            cell.Value.ToString()
+                                                                )
+                                                            .ToArray()
+                                                )
+                                            .ToArray()
+                                    )
+                                .ToArray();
+
+                            var collection_nums =
+                                collection
+                                    .Select(
+                                            column =>
+                                                from x in column
+                                                let k = NumberExpression.Parse(x)
+                                                where k != null
+                                                select k.Value
+                                        )
+                                    .ToArray();
+
+                            string[] answers = new string[measurements.Length + calculations.Length];
+
+                            switch (ordinate.Value) {
+                                case "Ave":
+                                case "Mean":
+                                    for (int m = 0; m < answers.Length; m++) {
+                                        answers[m] = collection_nums[m].Average().ToString();
+                                    }
+
+                                    break;
+
+                                case "Median":
+                                    for (int m = 0; m < answers.Length; m++) {
+                                        var list = collection_nums[m].ToList();
+                                        list.Sort();
+
+                                        answers[m] = list[list.Count / 2].ToString();
+                                    }
+
+                                    break;
+
+                                case "Mode":
+                                    for(int m = 0; m < answers.Length; m++) {
+                                        var freq = new Dictionary<string, int>();
+
+                                        foreach (var item in collection[m]) {
+                                            if (freq.ContainsKey(item))
+                                                freq[item]++;
+                                            else freq.Add(item, 1);
+                                        }
+
+                                        var highestmode =
+                                            freq.Values.Max();
+
+                                        answers[m] = string.Join(";", freq.Keys.Where(key => freq[key] == highestmode));
+                                    }
+
+                                    break;
+
+                                case "Range":
+                                    for (int m = 0; m < answers.Length; m++) {
+                                        answers[m] = (collection_nums[m].Max() - collection_nums[m].Min()).ToString();
+                                    }
+
+                                    break;
+
+                                case "Min":
+                                    for (int m = 0; m < answers.Length; m++) {
+                                        answers[m] = collection_nums[m].Min().ToString();
+                                    }
+
+                                    break;
+
+                                case "Max":
+                                    for (int m = 0; m < answers.Length; m++) {
+                                        answers[m] = collection_nums[m].Max().ToString();
+                                    }
+
+                                    break;
+
+                                case "Mid":
+                                    for (int m = 0; m < answers.Length; m++) {
+                                        answers[m] = ((collection_nums[m].Max() + collection_nums[m].Min()) / 2f).ToString();
+                                    }
+
+                                    break;
+
+                                case "StdDev":
+                                    for (int m = 0; m < answers.Length; m++) {
+                                        answers[m] = collection_nums[m].StandardDeviation().ToString();
+                                    }
+
+                                    break;
+                            }
+
+                            var row = dtaGrid.Rows[i];
+                            for (int m = dimensions.Length; m < row.Cells.Count; m++) {
+                                row.Cells[m].Value = answers[m - dimensions.Length];
+                            }
+                        }
+                    }
+                }
+
+                i++;
+            }
+        }
+
+        IEnumerable<int> RangeInts(int start, int skip, int times) {
+            while (times-- > 0) {
+                yield return start;
+
+                start += skip;
             }
         }
 
@@ -209,12 +380,13 @@ namespace datasheetmaker
                         for (int j = 0; j < dtaGrid.Rows.Count; j++) {
                             var row = dtaGrid.Rows[j];
 
-                            var cellvalue = row.Cells[i].Value.ToString();
-
-                            file.WriteStartElement("value");
-                            file.WriteAttributeString("i", j.ToString());
-                            file.WriteValue(cellvalue);
-                            file.WriteEndElement();
+                            var cellvalue = row.Cells[i].Value?.ToString();
+                            if (cellvalue != null) {
+                                file.WriteStartElement("value");
+                                file.WriteAttributeString("i", j.ToString());
+                                file.WriteValue(cellvalue);
+                                file.WriteEndElement();
+                            }
                         }
 
                         file.WriteEndElement();
@@ -227,14 +399,14 @@ namespace datasheetmaker
             }
         }
 
-        private void dtaGrid_CellEndEdit(object sender, DataGridViewCellEventArgs e) {
-        }
-
         private void dtaGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) {
             var variable =
                 (DataVariable)dtaGrid.Columns[e.ColumnIndex].Tag;
 
             if (variables[e.ColumnIndex].Units == "")
+                return;
+
+            if (e.Value == null)
                 return;
 
             var src = e.Value.ToString();
@@ -261,9 +433,19 @@ namespace datasheetmaker
             MessageBox.Show(@"Use the period (.) to separate units like kg.m.s^-2\n(that's it)");
         }
 
+        List<Tuple<int, int>> changingcellargs =
+            new List<Tuple<int, int>>();
         private void dtaGrid_CellValueChanged(object sender, DataGridViewCellEventArgs e) {
             if (e.RowIndex == -1)
                 return;
+
+            var tuple =
+                new Tuple<int, int>(e.ColumnIndex, e.RowIndex);
+
+            if (changingcellargs.Contains(tuple))
+                return;
+
+            changingcellargs.Add(tuple);
 
             var row = dtaGrid.Rows[e.RowIndex];
 
@@ -275,25 +457,31 @@ namespace datasheetmaker
                     (DataVariable)dtaGrid.Columns[i].Tag;
 
                 var cell =
-                    row.Cells[i].Value.ToString();
+                    row.Cells[i].Value?.ToString();
 
-                if (variable.Type == VariableType.Dependent) {
-                    try {
-                        var value = variable.Expression.Evaluate(boundvariables_values);
-                        var units = variable.Expression.FindUnits(boundvariables_units);
+                if (cell != null) {
+                    if (variable.Type == VariableType.Dependent) {
+                        try {
+                            var value = variable.Expression.Evaluate(boundvariables_values);
+                            var units = variable.Expression.FindUnits(boundvariables_units);
 
-                        row.Cells[i].Value = value + " " + units.ToString();
+                            row.Cells[i].Value = value + " " + units.ToString();
+                        }
+                        catch (KeyNotFoundException) {
+                        }
                     }
-                    catch (KeyNotFoundException) {
-                    }
-                }
 
-                var numexp = NumberExpression.Parse(ref cell);
-                if (numexp != null) {
-                    boundvariables_values.Add(variable.Name, numexp.Value);
-                    boundvariables_units.Add(variable.Name, numexp.Units);
+                    var numexp = NumberExpression.Parse(ref cell);
+                    if (numexp != null) {
+                        boundvariables_values.Add(variable.Name, numexp.Value);
+                        boundvariables_units.Add(variable.Name, numexp.Units);
+                    }
                 }
             }
+
+            UpdateAverages();
+
+            changingcellargs.Remove(tuple);
         }
 
         private void mnuFileExport_Click(object sender, EventArgs e) {

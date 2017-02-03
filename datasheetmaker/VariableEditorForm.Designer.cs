@@ -25,12 +25,16 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.Label lblName;
             System.Windows.Forms.Label lblEquation;
             System.Windows.Forms.Label lblIndependentValues;
             System.Windows.Forms.Label lblUnits;
             System.Windows.Forms.Label lblType;
             this.lstVariables = new System.Windows.Forms.ListBox();
+            this.mnuVariables = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.mnuVariablesMoveUp = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuVariablesMoveDown = new System.Windows.Forms.ToolStripMenuItem();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnAdd = new System.Windows.Forms.Button();
@@ -46,11 +50,13 @@
             this.tabIndependent = new System.Windows.Forms.TabPage();
             this.txtUnits = new System.Windows.Forms.TextBox();
             this.txtName = new System.Windows.Forms.TextBox();
+            this.chkBehavesLikeTrials = new System.Windows.Forms.CheckBox();
             lblName = new System.Windows.Forms.Label();
             lblEquation = new System.Windows.Forms.Label();
             lblIndependentValues = new System.Windows.Forms.Label();
             lblUnits = new System.Windows.Forms.Label();
             lblType = new System.Windows.Forms.Label();
+            this.mnuVariables.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -84,7 +90,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             lblIndependentValues.Location = new System.Drawing.Point(10, 6);
             lblIndependentValues.Name = "lblIndependentValues";
-            lblIndependentValues.Size = new System.Drawing.Size(101, 27);
+            lblIndependentValues.Size = new System.Drawing.Size(80, 27);
             lblIndependentValues.TabIndex = 1;
             lblIndependentValues.Text = "Values:";
             lblIndependentValues.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -112,12 +118,36 @@
             this.lstVariables.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstVariables.ContextMenuStrip = this.mnuVariables;
             this.lstVariables.FormattingEnabled = true;
-            this.lstVariables.Location = new System.Drawing.Point(12, 12);
+            this.lstVariables.IntegralHeight = false;
+            this.lstVariables.Location = new System.Drawing.Point(3, 3);
             this.lstVariables.Name = "lstVariables";
-            this.lstVariables.Size = new System.Drawing.Size(138, 290);
+            this.lstVariables.Size = new System.Drawing.Size(144, 296);
             this.lstVariables.TabIndex = 0;
             this.lstVariables.SelectedIndexChanged += new System.EventHandler(this.lstVariables_SelectedIndexChanged);
+            // 
+            // mnuVariables
+            // 
+            this.mnuVariables.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuVariablesMoveUp,
+            this.mnuVariablesMoveDown});
+            this.mnuVariables.Name = "mnuVariables";
+            this.mnuVariables.Size = new System.Drawing.Size(139, 48);
+            // 
+            // mnuVariablesMoveUp
+            // 
+            this.mnuVariablesMoveUp.Name = "mnuVariablesMoveUp";
+            this.mnuVariablesMoveUp.Size = new System.Drawing.Size(138, 22);
+            this.mnuVariablesMoveUp.Text = "Move &Up";
+            this.mnuVariablesMoveUp.Click += new System.EventHandler(this.mnuVariablesMoveUp_Click);
+            // 
+            // mnuVariablesMoveDown
+            // 
+            this.mnuVariablesMoveDown.Name = "mnuVariablesMoveDown";
+            this.mnuVariablesMoveDown.Size = new System.Drawing.Size(138, 22);
+            this.mnuVariablesMoveDown.Text = "Move &Down";
+            this.mnuVariablesMoveDown.Click += new System.EventHandler(this.mnuVariablesMoveDown_Click);
             // 
             // splitContainer1
             // 
@@ -140,14 +170,15 @@
             this.splitContainer1.Panel2.Controls.Add(lblName);
             this.splitContainer1.Panel2.Controls.Add(this.txtUnits);
             this.splitContainer1.Panel2.Controls.Add(this.txtName);
-            this.splitContainer1.Size = new System.Drawing.Size(447, 347);
-            this.splitContainer1.SplitterDistance = 163;
+            this.splitContainer1.Panel2.Controls.Add(this.chkBehavesLikeTrials);
+            this.splitContainer1.Size = new System.Drawing.Size(413, 330);
+            this.splitContainer1.SplitterDistance = 150;
             this.splitContainer1.TabIndex = 1;
             // 
             // btnDelete
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDelete.Location = new System.Drawing.Point(100, 308);
+            this.btnDelete.Location = new System.Drawing.Point(97, 300);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(50, 27);
             this.btnDelete.TabIndex = 1;
@@ -158,7 +189,7 @@
             // btnAdd
             // 
             this.btnAdd.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAdd.Location = new System.Drawing.Point(44, 308);
+            this.btnAdd.Location = new System.Drawing.Point(41, 300);
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(50, 27);
             this.btnAdd.TabIndex = 0;
@@ -168,6 +199,8 @@
             // 
             // cboType
             // 
+            this.cboType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cboType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboType.FormattingEnabled = true;
             this.cboType.Items.AddRange(new object[] {
@@ -176,7 +209,7 @@
             "Dependent"});
             this.cboType.Location = new System.Drawing.Point(77, 64);
             this.cboType.Name = "cboType";
-            this.cboType.Size = new System.Drawing.Size(191, 21);
+            this.cboType.Size = new System.Drawing.Size(170, 21);
             this.cboType.TabIndex = 5;
             this.cboType.SelectedIndexChanged += new System.EventHandler(this.cboType_SelectedIndexChanged);
             // 
@@ -193,7 +226,7 @@
             this.tabSettings.Multiline = true;
             this.tabSettings.Name = "tabSettings";
             this.tabSettings.SelectedIndex = 0;
-            this.tabSettings.Size = new System.Drawing.Size(277, 253);
+            this.tabSettings.Size = new System.Drawing.Size(256, 236);
             this.tabSettings.TabIndex = 4;
             // 
             // tabDependent
@@ -203,7 +236,7 @@
             this.tabDependent.Location = new System.Drawing.Point(4, 4);
             this.tabDependent.Name = "tabDependent";
             this.tabDependent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDependent.Size = new System.Drawing.Size(269, 227);
+            this.tabDependent.Size = new System.Drawing.Size(248, 210);
             this.tabDependent.TabIndex = 0;
             this.tabDependent.Text = "Dependent";
             this.tabDependent.UseVisualStyleBackColor = true;
@@ -217,7 +250,7 @@
             this.txtEquation.Multiline = true;
             this.txtEquation.Name = "txtEquation";
             this.txtEquation.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtEquation.Size = new System.Drawing.Size(251, 184);
+            this.txtEquation.Size = new System.Drawing.Size(230, 167);
             this.txtEquation.TabIndex = 3;
             this.txtEquation.TextChanged += new System.EventHandler(this.txtEquation_TextChanged);
             // 
@@ -231,7 +264,7 @@
             this.tabDimensional.Location = new System.Drawing.Point(4, 4);
             this.tabDimensional.Name = "tabDimensional";
             this.tabDimensional.Padding = new System.Windows.Forms.Padding(3);
-            this.tabDimensional.Size = new System.Drawing.Size(269, 227);
+            this.tabDimensional.Size = new System.Drawing.Size(248, 210);
             this.tabDimensional.TabIndex = 1;
             this.tabDimensional.Text = "Dimensional";
             this.tabDimensional.UseVisualStyleBackColor = true;
@@ -240,16 +273,16 @@
             // 
             this.txtIndependentValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtIndependentValue.Location = new System.Drawing.Point(10, 201);
+            this.txtIndependentValue.Location = new System.Drawing.Point(10, 184);
             this.txtIndependentValue.Name = "txtIndependentValue";
-            this.txtIndependentValue.Size = new System.Drawing.Size(251, 20);
+            this.txtIndependentValue.Size = new System.Drawing.Size(230, 20);
             this.txtIndependentValue.TabIndex = 4;
             this.txtIndependentValue.TextChanged += new System.EventHandler(this.txtIndependentValue_TextChanged);
             // 
             // btnDeleteIndependentValue
             // 
             this.btnDeleteIndependentValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDeleteIndependentValue.Location = new System.Drawing.Point(211, 6);
+            this.btnDeleteIndependentValue.Location = new System.Drawing.Point(190, 6);
             this.btnDeleteIndependentValue.Name = "btnDeleteIndependentValue";
             this.btnDeleteIndependentValue.Size = new System.Drawing.Size(50, 27);
             this.btnDeleteIndependentValue.TabIndex = 3;
@@ -260,7 +293,7 @@
             // btnAddIndependentValue
             // 
             this.btnAddIndependentValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnAddIndependentValue.Location = new System.Drawing.Point(155, 6);
+            this.btnAddIndependentValue.Location = new System.Drawing.Point(134, 6);
             this.btnAddIndependentValue.Name = "btnAddIndependentValue";
             this.btnAddIndependentValue.Size = new System.Drawing.Size(50, 27);
             this.btnAddIndependentValue.TabIndex = 2;
@@ -274,9 +307,10 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lstIndependentValues.FormattingEnabled = true;
+            this.lstIndependentValues.IntegralHeight = false;
             this.lstIndependentValues.Location = new System.Drawing.Point(10, 37);
             this.lstIndependentValues.Name = "lstIndependentValues";
-            this.lstIndependentValues.Size = new System.Drawing.Size(251, 160);
+            this.lstIndependentValues.Size = new System.Drawing.Size(230, 143);
             this.lstIndependentValues.TabIndex = 0;
             this.lstIndependentValues.SelectedIndexChanged += new System.EventHandler(this.lstIndependentValues_SelectedIndexChanged);
             // 
@@ -285,7 +319,7 @@
             this.tabIndependent.Location = new System.Drawing.Point(4, 4);
             this.tabIndependent.Name = "tabIndependent";
             this.tabIndependent.Padding = new System.Windows.Forms.Padding(3);
-            this.tabIndependent.Size = new System.Drawing.Size(269, 227);
+            this.tabIndependent.Size = new System.Drawing.Size(248, 210);
             this.tabIndependent.TabIndex = 2;
             this.tabIndependent.Text = "Independent";
             this.tabIndependent.UseVisualStyleBackColor = true;
@@ -296,7 +330,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtUnits.Location = new System.Drawing.Point(77, 38);
             this.txtUnits.Name = "txtUnits";
-            this.txtUnits.Size = new System.Drawing.Size(191, 20);
+            this.txtUnits.Size = new System.Drawing.Size(170, 20);
             this.txtUnits.TabIndex = 0;
             this.txtUnits.TextChanged += new System.EventHandler(this.txtUnits_TextChanged);
             // 
@@ -306,19 +340,33 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtName.Location = new System.Drawing.Point(77, 12);
             this.txtName.Name = "txtName";
-            this.txtName.Size = new System.Drawing.Size(191, 20);
+            this.txtName.Size = new System.Drawing.Size(170, 20);
             this.txtName.TabIndex = 0;
             this.txtName.TextChanged += new System.EventHandler(this.txtName_TextChanged);
+            // 
+            // chkBehavesLikeTrials
+            // 
+            this.chkBehavesLikeTrials.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkBehavesLikeTrials.Location = new System.Drawing.Point(77, 86);
+            this.chkBehavesLikeTrials.Name = "chkBehavesLikeTrials";
+            this.chkBehavesLikeTrials.Size = new System.Drawing.Size(170, 24);
+            this.chkBehavesLikeTrials.TabIndex = 6;
+            this.chkBehavesLikeTrials.Text = "Behaves like Trials";
+            this.chkBehavesLikeTrials.UseVisualStyleBackColor = true;
+            this.chkBehavesLikeTrials.CheckedChanged += new System.EventHandler(this.chkBehavesLikeTrials_CheckedChanged);
+            this.chkBehavesLikeTrials.VisibleChanged += new System.EventHandler(this.chkBehavesLikeTrials_VisibleChanged);
             // 
             // VariableEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(447, 347);
+            this.ClientSize = new System.Drawing.Size(413, 330);
             this.Controls.Add(this.splitContainer1);
             this.Name = "VariableEditorForm";
             this.Text = "Variables";
             this.Load += new System.EventHandler(this.VariableEditorForm_Load);
+            this.mnuVariables.ResumeLayout(false);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.Panel2.PerformLayout();
@@ -351,5 +399,9 @@
         private System.Windows.Forms.TextBox txtUnits;
         private System.Windows.Forms.ComboBox cboType;
         private System.Windows.Forms.TabPage tabIndependent;
+        private System.Windows.Forms.ContextMenuStrip mnuVariables;
+        private System.Windows.Forms.ToolStripMenuItem mnuVariablesMoveUp;
+        private System.Windows.Forms.ToolStripMenuItem mnuVariablesMoveDown;
+        private System.Windows.Forms.CheckBox chkBehavesLikeTrials;
     }
 }
