@@ -29,6 +29,10 @@
             this.mnuFile = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileOpen = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuFileSave = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuFileExport = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileExportRawData = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuFileExportFormattedDatasheet = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuData = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDataEditVariables = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
@@ -36,10 +40,6 @@
             this.dtaGrid = new System.Windows.Forms.DataGridView();
             this.diagOpen = new System.Windows.Forms.OpenFileDialog();
             this.diagSave = new System.Windows.Forms.SaveFileDialog();
-            this.mnuFileSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.mnuFileExport = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileExportRawData = new System.Windows.Forms.ToolStripMenuItem();
-            this.mnuFileExportFormattedDatasheet = new System.Windows.Forms.ToolStripMenuItem();
             this.diagExport = new System.Windows.Forms.SaveFileDialog();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtaGrid)).BeginInit();
@@ -72,7 +72,7 @@
             // 
             this.mnuFileOpen.Name = "mnuFileOpen";
             this.mnuFileOpen.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.mnuFileOpen.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileOpen.Size = new System.Drawing.Size(146, 22);
             this.mnuFileOpen.Text = "&Open";
             this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
             // 
@@ -80,9 +80,38 @@
             // 
             this.mnuFileSave.Name = "mnuFileSave";
             this.mnuFileSave.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.mnuFileSave.Size = new System.Drawing.Size(152, 22);
+            this.mnuFileSave.Size = new System.Drawing.Size(146, 22);
             this.mnuFileSave.Text = "&Save";
             this.mnuFileSave.Click += new System.EventHandler(this.mnuFileSave_Click);
+            // 
+            // mnuFileSeparator1
+            // 
+            this.mnuFileSeparator1.Name = "mnuFileSeparator1";
+            this.mnuFileSeparator1.Size = new System.Drawing.Size(143, 6);
+            // 
+            // mnuFileExport
+            // 
+            this.mnuFileExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.mnuFileExportRawData,
+            this.mnuFileExportFormattedDatasheet});
+            this.mnuFileExport.Name = "mnuFileExport";
+            this.mnuFileExport.Size = new System.Drawing.Size(146, 22);
+            this.mnuFileExport.Text = "E&xport";
+            this.mnuFileExport.Click += new System.EventHandler(this.mnuFileExport_Click);
+            // 
+            // mnuFileExportRawData
+            // 
+            this.mnuFileExportRawData.Name = "mnuFileExportRawData";
+            this.mnuFileExportRawData.Size = new System.Drawing.Size(184, 22);
+            this.mnuFileExportRawData.Text = "&Raw Data";
+            this.mnuFileExportRawData.Click += new System.EventHandler(this.mnuFileExportRawData_Click);
+            // 
+            // mnuFileExportFormattedDatasheet
+            // 
+            this.mnuFileExportFormattedDatasheet.Name = "mnuFileExportFormattedDatasheet";
+            this.mnuFileExportFormattedDatasheet.Size = new System.Drawing.Size(184, 22);
+            this.mnuFileExportFormattedDatasheet.Text = "&Formatted Datasheet";
+            this.mnuFileExportFormattedDatasheet.Click += new System.EventHandler(this.mnuFileExportFormattedDatasheet_Click);
             // 
             // mnuData
             // 
@@ -95,7 +124,7 @@
             // mnuDataEditVariables
             // 
             this.mnuDataEditVariables.Name = "mnuDataEditVariables";
-            this.mnuDataEditVariables.Size = new System.Drawing.Size(152, 22);
+            this.mnuDataEditVariables.Size = new System.Drawing.Size(143, 22);
             this.mnuDataEditVariables.Text = "&Edit Variables";
             this.mnuDataEditVariables.Click += new System.EventHandler(this.mnuDataEditVariables_Click);
             // 
@@ -141,38 +170,9 @@
     "heet";
             this.diagSave.FileOk += new System.ComponentModel.CancelEventHandler(this.diagSave_FileOk);
             // 
-            // mnuFileSeparator1
-            // 
-            this.mnuFileSeparator1.Name = "mnuFileSeparator1";
-            this.mnuFileSeparator1.Size = new System.Drawing.Size(149, 6);
-            // 
-            // mnuFileExport
-            // 
-            this.mnuFileExport.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuFileExportRawData,
-            this.mnuFileExportFormattedDatasheet});
-            this.mnuFileExport.Name = "mnuFileExport";
-            this.mnuFileExport.Size = new System.Drawing.Size(152, 22);
-            this.mnuFileExport.Text = "E&xport";
-            this.mnuFileExport.Click += new System.EventHandler(this.mnuFileExport_Click);
-            // 
-            // mnuFileExportRawData
-            // 
-            this.mnuFileExportRawData.Name = "mnuFileExportRawData";
-            this.mnuFileExportRawData.Size = new System.Drawing.Size(184, 22);
-            this.mnuFileExportRawData.Text = "&Raw Data";
-            this.mnuFileExportRawData.Click += new System.EventHandler(this.mnuFileExportRawData_Click);
-            // 
-            // mnuFileExportFormattedDatasheet
-            // 
-            this.mnuFileExportFormattedDatasheet.Name = "mnuFileExportFormattedDatasheet";
-            this.mnuFileExportFormattedDatasheet.Size = new System.Drawing.Size(184, 22);
-            this.mnuFileExportFormattedDatasheet.Text = "&Formatted Datasheet";
-            this.mnuFileExportFormattedDatasheet.Click += new System.EventHandler(this.mnuFileExportFormattedDatasheet_Click);
-            // 
             // diagExport
             // 
-            this.diagExport.Filter = "Raw Data (*.csv)|*.csv|Formatted Data (*.csv)|*.csv";
+            this.diagExport.Filter = "Raw Data (*.csv)|*.csv|Formatted Data (*.csv)|*.csv|Formatted Data (*.txt)|*.txt";
             this.diagExport.FileOk += new System.ComponentModel.CancelEventHandler(this.diagExport_FileOk);
             // 
             // MainForm

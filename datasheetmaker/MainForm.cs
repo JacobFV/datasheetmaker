@@ -132,6 +132,8 @@ namespace datasheetmaker
             var calculations =
                 variables.Where(_ => _.Type == VariableType.Dependent).ToArray();
 
+            var units = measurements.Concat(calculations).Select(_ => _.Units).ToArray();
+
             var kvps =
                 dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
             
@@ -209,7 +211,9 @@ namespace datasheetmaker
                                 case "Mean":
                                     for (int m = 0; m < answers.Length; m++) {
                                         try {
-                                            answers[m] = collection_nums[m].Average().ToString();
+                                            answers[m] = collection_nums[m].Average().ToString("0.#####");
+                                            if (units[m] != "")
+                                                answers[m] += " " + units[m];
                                         }
                                         catch (InvalidOperationException) {
                                         }
@@ -223,7 +227,9 @@ namespace datasheetmaker
                                             var list = collection_nums[m].ToList();
                                             list.Sort();
 
-                                            answers[m] = list[list.Count / 2].ToString();
+                                            answers[m] = list[list.Count / 2].ToString("0.#####");
+                                            if (units[m] != "")
+                                                answers[m] += " " + units[m];
                                         }
                                         catch (InvalidOperationException) {
                                         }
@@ -245,6 +251,8 @@ namespace datasheetmaker
                                             freq.Values.Max();
 
                                         answers[m] = string.Join(";", freq.Keys.Where(key => freq[key] == highestmode));
+                                        if (units[m] != "")
+                                            answers[m] += " " + units[m];
                                     }
 
                                     break;
@@ -252,7 +260,9 @@ namespace datasheetmaker
                                 case "Range":
                                     for (int m = 0; m < answers.Length; m++) {
                                         try {
-                                            answers[m] = (collection_nums[m].Max() - collection_nums[m].Min()).ToString();
+                                            answers[m] = (collection_nums[m].Max() - collection_nums[m].Min()).ToString("0.#####");
+                                            if (units[m] != "")
+                                                answers[m] += " " + units[m];
                                         }
                                         catch (InvalidOperationException) {
                                         }
@@ -263,7 +273,9 @@ namespace datasheetmaker
                                 case "Min":
                                     for (int m = 0; m < answers.Length; m++) {
                                         try {
-                                            answers[m] = collection_nums[m].Min().ToString();
+                                            answers[m] = collection_nums[m].Min().ToString("0.#####");
+                                            if (units[m] != "")
+                                                answers[m] += " " + units[m];
                                         }
                                         catch (InvalidOperationException) {
                                         }
@@ -274,7 +286,9 @@ namespace datasheetmaker
                                 case "Max":
                                     for (int m = 0; m < answers.Length; m++) {
                                         try {
-                                            answers[m] = collection_nums[m].Max().ToString();
+                                            answers[m] = collection_nums[m].Max().ToString("0.#####");
+                                            if (units[m] != "")
+                                                answers[m] += " " + units[m];
                                         }
                                         catch (InvalidOperationException) {
                                         }
@@ -285,7 +299,9 @@ namespace datasheetmaker
                                 case "Mid":
                                     for (int m = 0; m < answers.Length; m++) {
                                         try {
-                                            answers[m] = ((collection_nums[m].Max() + collection_nums[m].Min()) / 2f).ToString();
+                                            answers[m] = ((collection_nums[m].Max() + collection_nums[m].Min()) / 2f).ToString("0.#####");
+                                            if (units[m] != "")
+                                                answers[m] += " " + units[m];
                                         }
                                         catch (InvalidOperationException) {
                                         }
@@ -296,7 +312,9 @@ namespace datasheetmaker
                                 case "StdDev":
                                     for (int m = 0; m < answers.Length; m++) {
                                         try {
-                                            answers[m] = collection_nums[m].StandardDeviation().ToString();
+                                            answers[m] = collection_nums[m].StandardDeviation().ToString("0.#####");
+                                            if (units[m] != "")
+                                                answers[m] += " " + units[m];
                                         }
                                         catch (InvalidOperationException) {
                                         }
@@ -514,7 +532,7 @@ namespace datasheetmaker
                             var value = variable.Expression.Evaluate(boundvariables_values);
                             var units = variable.Expression.FindUnits(boundvariables_units);
 
-                            row.Cells[i].Value = value + " " + units.ToString();
+                            row.Cells[i].Value = value.ToString("0.#####") + " " + units.ToString();
                         }
                         catch (KeyNotFoundException) {
                         }
@@ -590,13 +608,14 @@ namespace datasheetmaker
                     break;
 
                 case 2:
+                case 3:
                     // Formatted Data
                     File.WriteAllLines(
                             diagExport.FileName,
                             new[] {
                                 string.Join(
-                                        ",",
-                                        variables.Select(variable =>variable.Name)
+                                        diagExport.FilterIndex == 2 ? "," : "\t",
+                                        variables.Select(variable => variable.Name)
                                     )
                             }.Concat(
                                 Enumerable
