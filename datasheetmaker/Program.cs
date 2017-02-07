@@ -12,10 +12,16 @@ namespace datasheetmaker
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main() {
+        static void Main(string[] args) {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+
+            using (var form = new MainForm()) {
+                if (args.Length > 0)
+                    form.Filename = args[0];
+
+                Application.Run(form);
+            }
         }
     }
 }

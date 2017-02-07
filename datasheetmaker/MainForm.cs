@@ -18,6 +18,16 @@ namespace datasheetmaker
     {
         BindingList<DataVariable> variables =
             new BindingList<DataVariable>();
+        string filename = "";
+
+        public string Filename {
+            get { return filename; }
+            set {
+                filename = value;
+
+                Open();
+            }
+        }
 
         public MainForm() {
             InitializeComponent();
@@ -381,11 +391,18 @@ namespace datasheetmaker
         }
 
         private void mnuFileSave_Click(object sender, EventArgs e) {
-            diagSave.ShowDialog(this);
+            if (string.IsNullOrEmpty(filename))
+                diagSave.ShowDialog(this);
+            else Save();
         }
 
         private void diagOpen_FileOk(object sender, CancelEventArgs e) {
-            using (var stream = diagOpen.OpenFile()) {
+            filename = diagOpen.FileName;
+            Open();
+        }
+
+        void Open() {
+            using (var stream = File.OpenRead(filename)) {
                 var file =
                     XDocument.Load(stream);
 
@@ -433,8 +450,8 @@ namespace datasheetmaker
             }
         }
 
-        private void diagSave_FileOk(object sender, CancelEventArgs e) {
-            using (var file = XmlWriter.Create(diagSave.FileName)) {
+        void Save() {
+            using (var file = XmlWriter.Create(filename)) {
                 file.WriteStartDocument();
                 file.WriteStartElement("datasheet");
 
@@ -485,6 +502,12 @@ namespace datasheetmaker
                 file.WriteEndElement();
                 file.WriteEndDocument();
             }
+        }
+
+        private void diagSave_FileOk(object sender, CancelEventArgs e) {
+            filename = diagSave.FileName;
+
+            Save();
         }
 
         private void dtaGrid_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e) {
