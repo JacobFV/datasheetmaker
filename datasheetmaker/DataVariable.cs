@@ -9,10 +9,10 @@ namespace datasheetmaker
 {
     public sealed class DataVariable
     {
-        public string Name { get; set; }
-        public string Units { get; set; }
+        public string Name { get; set; } = "";
+        public string Units { get; set; } = "";
 
-        public VariableType Type { get; set; }
+        public VariableType Type { get; set; } = VariableType.Dimensional;
 
         /// <summary>
         /// For independent variables
@@ -29,7 +29,7 @@ namespace datasheetmaker
             }
         }
 
-        string equation;
+        string equation = "";
 
         /// <summary>
         /// For dependent values
