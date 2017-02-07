@@ -640,7 +640,7 @@ namespace datasheetmaker
                                                             .Select(
                                                                     cell =>
                                                                         NumberExpression.Parse(cell.Value.ToString())
-                                                                            .Value
+                                                                            ?.Value
                                                                             .ToString()
                                                                             ?? cell.Value.ToString()
                                                                 )
