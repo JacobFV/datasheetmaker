@@ -37,6 +37,21 @@ namespace datasheetmaker
         void SetupNewVariables() {
             variables = new BindingList<DataVariable>(variables.OrderBy(x => x.Type).ToList());
 
+            var trackedcells =
+                Enumerable
+                    .Range(0, dtaGrid.Rows.Count)
+                    .Select(
+                            row_i =>
+                            Enumerable
+                                .Range(0, dtaGrid.Columns.Count)
+                                .Select(
+                                        column_i =>
+                                            dtaGrid.Rows[row_i].Cells[column_i].Value
+                                    )
+                                .ToArray()
+                        )
+                    .ToArray();
+
             dtaGrid.Rows.Clear();
             dtaGrid.Columns.Clear();
 
@@ -63,7 +78,7 @@ namespace datasheetmaker
                 //    default:
                 //        break;
                 //}
-
+                column.SortMode = DataGridViewColumnSortMode.NotSortable;
                 column.Name = $"clm{variable.Name}";
                 column.HeaderText =
                     variable.Units != "" ?
@@ -114,6 +129,12 @@ namespace datasheetmaker
                     cell.ToolTipText = calculation.Name;
                 }
             }
+
+            updatingaverages = true;
+            for (int row_i = 0; row_i < trackedcells.Length; row_i++)
+                for (int column_i = 0; column_i < trackedcells[row_i].Length; column_i++)
+                    dtaGrid.Rows[row_i].Cells[column_i].Value = trackedcells[row_i][column_i];
+            updatingaverages = false;
         }
 
         bool updatingaverages = false;
@@ -636,7 +657,7 @@ namespace datasheetmaker
                                                                         if (variable.Type == VariableType.Dependent)
                                                                             return cell.Value + " = " + variable.Expression.ToString();
 
-                                                                        return cell.Value;
+                                                                        return cell.FormattedValue;
                                                                     }
                                                                 )
                                                     )
