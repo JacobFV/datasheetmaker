@@ -103,8 +103,7 @@ namespace datasheetmaker
 
             var kvps =
                 dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
-
-            var i = 0;
+            
             foreach (var ordinates in Combinations(kvps)) {
                 var row = new DataGridViewRow();
                 dtaGrid
@@ -115,34 +114,11 @@ namespace datasheetmaker
                                 .Concat(calculations.Select(_ => ""))
                                 .ToArray()
                         );
-
-                continue;
-                var j = 0;
-
-                foreach (var ordinate in ordinates) {
-                    var cell = row.Cells[j++];
-
-                    //cell.ReadOnly = true;
-                    cell.Value = ordinate.Key.Name;
-                }
-
-                foreach (var measurement in measurements) {
-                    var cell = row.Cells[j++];
-
-                    cell.ToolTipText = measurement.Name;
-                }
-
-                foreach (var calculation in calculations) {
-                    var cell = row.Cells[j++];
-
-                    cell.ReadOnly = true;
-                    cell.ToolTipText = calculation.Name;
-                }
             }
 
             updatingaverages = true;
             for (int row_i = 0; row_i < trackedcells.Length; row_i++)
-                for (int column_i = 0; column_i < trackedcells[row_i].Length; column_i++)
+                for (int column_i = dimensions.Length; column_i < dimensions.Length + measurements.Length; column_i++)
                     dtaGrid.Rows[row_i].Cells[column_i].Value = trackedcells[row_i][column_i];
             updatingaverages = false;
         }
