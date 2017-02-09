@@ -19,6 +19,17 @@ namespace datasheetmaker
         BindingList<DataVariable> variables =
             new BindingList<DataVariable>();
         string filename = "";
+        static readonly string[] collectors = new string[] {
+            "Ave",
+            "Mean",
+            "Median",
+            "Mode",
+            "Range",
+            "Min",
+            "Max",
+            "Mid",
+            "StdDev",
+        };
 
         public string Filename {
             get { return filename; }
@@ -150,26 +161,9 @@ namespace datasheetmaker
                     var ordinate = ordinates[j];
 
                     if (ordinate.Key.BehavesLikeTrials) {
-                        bool shouldcollectvalues = false;
-
-                        switch (ordinate.Value) {
-                            case "Ave":
-                            case "Mean":
-                            case "Median":
-                            case "Mode":
-                            case "Range":
-                            case "Max":
-                            case "Min":
-                            case "Mid":
-                            case "StdDev":
-                                shouldcollectvalues = true;
-                                break;
-
-                            default:
-                                shouldcollectvalues = false;
-                                break;
-                        }
-
+                        bool shouldcollectvalues =
+                            collectors.Contains(ordinate.Value);
+                        
                         if (shouldcollectvalues) {
                             var k_skip =
                                 j + 1 != ordinates.Length ?
@@ -629,6 +623,32 @@ namespace datasheetmaker
 
                 case 2:
                 case 3:
+                    var dimensions =
+                        variables.Where(_ => _.Type == VariableType.Dimensional).ToArray();
+
+                    var measurements =
+                        variables.Where(_ => _.Type == VariableType.Independent).ToArray();
+
+                    var calculations =
+                        variables.Where(_ => _.Type == VariableType.Dependent).ToArray();
+
+                    var units = measurements.Concat(calculations).Select(_ => _.Units).ToArray();
+
+                    var kvps =
+                        dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
+
+                    var collectedtrials =
+                        Combinations(kvps)
+                            .Select(
+                                    combination =>
+                                        combination
+                                            .FirstOrDefault(
+                                                    kvp => 
+                                                        collectors.Contains(kvp.Value)
+                                                )
+                                )
+                            .ToArray();
+
                     // Formatted Data
                     File.WriteAllLines(
                             diagExport.FileName,
@@ -640,21 +660,41 @@ namespace datasheetmaker
                             }.Concat(
                                 Enumerable
                                     .Range(0, dtaGrid.Rows.Count)
-                                    .Select(i => dtaGrid.Rows[i])
+                                    .Select(i => new { row = dtaGrid.Rows[i], i })
                                     .Select(
                                             row =>
                                                 string.Join(
                                                         ",",
                                                         row
+                                                            .row
                                                             .Cells
                                                             .Cast<DataGridViewCell>()
                                                             .Select(
-                                                                    cell => {
+                                                                    (cell, j) => {
                                                                         var variable =
                                                                             variables[cell.ColumnIndex];
 
-                                                                        if (variable.Type == VariableType.Dependent)
-                                                                            return cell.Value + " = " + variable.Expression.ToString();
+                                                                        var ordinate =
+                                                                            collectedtrials[row.i];
+
+                                                                        string equ = null;
+
+                                                                        switch (ordinate.Value) {
+                                                                            case null:
+                                                                                if (variable.Type == VariableType.Dependent)
+                                                                                    equ = variable.Expression.ToString();
+                                                                                break;
+
+                                                                            default:
+                                                                                if (j >= dimensions.Length) {
+                                                                                    var k_times = ordinate.Key.Values.Count(_ => _.Any(char.IsDigit));
+                                                                                    equ = collectedtrials[row.i].Value + "{above " + ordinate.Key.Values.Count(str => str.Any(char.IsDigit)).ToString() + "}";
+                                                                                }
+                                                                                break;
+                                                                        }
+
+                                                                        if (equ != null)
+                                                                            return cell.FormattedValue + " = " + equ;
 
                                                                         return cell.FormattedValue;
                                                                     }
