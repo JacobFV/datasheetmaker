@@ -822,5 +822,13 @@ namespace datasheetmaker
             UpdateAverages();
             updating = tmp;
         }
+
+        private void MainForm_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
+            if (e.KeyCode == Keys.Delete) {
+                foreach (DataGridViewCell cell in dtaGrid.SelectedCells) {
+                    cell.Value = "";
+                }
+            }
+        }
     }
 }

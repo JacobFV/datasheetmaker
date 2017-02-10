@@ -187,6 +187,7 @@
             this.dtaGrid.TabIndex = 1;
             this.dtaGrid.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dtaGrid_CellFormatting);
             this.dtaGrid.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dtaGrid_CellValueChanged);
+            this.dtaGrid.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.MainForm_PreviewKeyDown);
             // 
             // diagOpen
             // 
@@ -212,9 +213,11 @@
             this.ClientSize = new System.Drawing.Size(616, 403);
             this.Controls.Add(this.dtaGrid);
             this.Controls.Add(this.menuStrip1);
+            this.KeyPreview = true;
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainForm";
             this.Text = "Datasheet Maker";
+            this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.MainForm_PreviewKeyDown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtaGrid)).EndInit();
