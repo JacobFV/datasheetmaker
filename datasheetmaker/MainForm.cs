@@ -20,7 +20,7 @@ namespace datasheetmaker
             new BindingList<DataVariable>();
         string filename = "";
         static readonly string[] collectors = new string[] {
-            "Ave",
+            "Avg",
             "Mean",
             "Median",
             "Mode",
@@ -208,7 +208,7 @@ namespace datasheetmaker
                             string[] answers = new string[measurements.Length + calculations.Length];
 
                             switch (ordinate.Value) {
-                                case "Ave":
+                                case "Avg":
                                 case "Mean":
                                     for (int m = 0; m < answers.Length; m++) {
                                         try {
