@@ -127,19 +127,19 @@ namespace datasheetmaker
                         );
             }
 
-            updatingaverages = true;
+            updating = true;
             for (int row_i = 0; row_i < trackedcells.Length; row_i++)
                 for (int column_i = dimensions.Length; column_i < dimensions.Length + measurements.Length; column_i++)
                     dtaGrid.Rows[row_i].Cells[column_i].Value = trackedcells[row_i][column_i];
-            updatingaverages = false;
+            updating = false;
         }
 
-        bool updatingaverages = false;
+        bool updating = false;
         void UpdateAverages() {
-            if (updatingaverages)
+            if (updating)
                 return;
 
-            updatingaverages = true;
+            updating = true;
 
             var dimensions =
                 variables.Where(_ => _.Type == VariableType.Dimensional).ToArray();
@@ -184,9 +184,12 @@ namespace datasheetmaker
                                                             .Skip(dimensions.Length)
                                                             .Select(
                                                                     cell =>
+                                                                        cell.Value != null ?
                                                                         NumberExpression.Parse(cell.Value.ToString())?.Value.ToString() ??
-                                                                            cell.Value.ToString()
+                                                                            cell.Value.ToString() :
+                                                                            null
                                                                 )
+                                                            .Where(_ => _ != null)
                                                             .ToArray()
                                                 )
                                             .ToArray()
@@ -335,7 +338,48 @@ namespace datasheetmaker
                 i++;
             }
 
-            updatingaverages = false;
+            updating = false;
+        }
+
+        void UpdateVariables(int rowindex) {
+            if (updating)
+                return;
+
+            //updating = true;
+
+            var row = dtaGrid.Rows[rowindex];
+
+            var boundvariables_values = new Dictionary<string, double>();
+            var boundvariables_units = new Dictionary<string, UnitsSI>();
+
+            for (var i = 0; i < dtaGrid.ColumnCount; i++) {
+                var variable =
+                    (DataVariable)dtaGrid.Columns[i].Tag;
+
+                var cell =
+                    row.Cells[i].Value?.ToString();
+
+                if (cell != null) {
+                    if (variable.Type == VariableType.Dependent) {
+                        try {
+                            var value = variable.Expression.Evaluate(boundvariables_values);
+                            var units = variable.Expression.FindUnits(boundvariables_units);
+
+                            row.Cells[i].Value = value.ToString("0.#####") + " " + units.ToString();
+                        }
+                        catch (KeyNotFoundException) {
+                        }
+                    }
+
+                    var numexp = NumberExpression.Parse(ref cell);
+                    if (numexp != null) {
+                        boundvariables_values.Add(variable.Name, numexp.Value);
+                        boundvariables_units.Add(variable.Name, numexp.Units);
+                    }
+                }
+            }
+
+            //updating = false;
         }
 
         IEnumerable<int> RangeInts(int start, int skip, int times) {
@@ -400,10 +444,10 @@ namespace datasheetmaker
                     variables.Add(variable);
                 }
 
+                updating = true;
+
                 SetupNewVariables();
-
-                updatingaverages = true;
-
+                
                 foreach (var xmeasurement in xdatasheet.Element("measurements").Elements("variable")) {
                     var name = xmeasurement.Attribute("name").Value;
                     var i = variables.Select((dt, j) => new { dt, j }).Where(k => k.dt.Name == name).First().j;
@@ -416,7 +460,7 @@ namespace datasheetmaker
                     }
                 }
 
-                updatingaverages = false;
+                updating = false;
             }
         }
 
@@ -528,37 +572,7 @@ namespace datasheetmaker
 
             changingcellargs.Add(tuple);
 
-            var row = dtaGrid.Rows[e.RowIndex];
-
-            var boundvariables_values = new Dictionary<string, double>();
-            var boundvariables_units = new Dictionary<string, UnitsSI>();
-
-            for (var i = 0; i < dtaGrid.ColumnCount; i++) {
-                var variable =
-                    (DataVariable)dtaGrid.Columns[i].Tag;
-
-                var cell =
-                    row.Cells[i].Value?.ToString();
-
-                if (cell != null) {
-                    if (variable.Type == VariableType.Dependent) {
-                        try {
-                            var value = variable.Expression.Evaluate(boundvariables_values);
-                            var units = variable.Expression.FindUnits(boundvariables_units);
-
-                            row.Cells[i].Value = value.ToString("0.#####") + " " + units.ToString();
-                        }
-                        catch (KeyNotFoundException) {
-                        }
-                    }
-
-                    var numexp = NumberExpression.Parse(ref cell);
-                    if (numexp != null) {
-                        boundvariables_values.Add(variable.Name, numexp.Value);
-                        boundvariables_units.Add(variable.Name, numexp.Units);
-                    }
-                }
-            }
+            UpdateVariables(e.RowIndex);
 
             UpdateAverages();
 
@@ -791,6 +805,22 @@ namespace datasheetmaker
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        private void mnuDataAutomaticallyUpdate_Click(object sender, EventArgs e) {
+            updating = !mnuDataAutomaticallyUpdate.Checked;
+        }
+
+        private void mnuDataUpdateNow_Click(object sender, EventArgs e) {
+            var tmp = updating;
+
+            updating = false;
+
+            for (int i = 0; i < dtaGrid.RowCount; i++)
+                UpdateVariables(i);
+
+            UpdateAverages();
+            updating = tmp;
         }
     }
 }

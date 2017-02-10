@@ -35,6 +35,9 @@
             this.mnuFileExportFormattedDatasheet = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuData = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuDataEditVariables = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDataSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.mnuDataAutomaticallyUpdate = new System.Windows.Forms.ToolStripMenuItem();
+            this.mnuDataUpdateNow = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.mnuHelpFormattingUnits = new System.Windows.Forms.ToolStripMenuItem();
             this.dtaGrid = new System.Windows.Forms.DataGridView();
@@ -116,7 +119,10 @@
             // mnuData
             // 
             this.mnuData.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.mnuDataEditVariables});
+            this.mnuDataEditVariables,
+            this.mnuDataSeparator1,
+            this.mnuDataAutomaticallyUpdate,
+            this.mnuDataUpdateNow});
             this.mnuData.Name = "mnuData";
             this.mnuData.Size = new System.Drawing.Size(43, 20);
             this.mnuData.Text = "&Data";
@@ -124,9 +130,31 @@
             // mnuDataEditVariables
             // 
             this.mnuDataEditVariables.Name = "mnuDataEditVariables";
-            this.mnuDataEditVariables.Size = new System.Drawing.Size(143, 22);
+            this.mnuDataEditVariables.Size = new System.Drawing.Size(189, 22);
             this.mnuDataEditVariables.Text = "&Edit Variables";
             this.mnuDataEditVariables.Click += new System.EventHandler(this.mnuDataEditVariables_Click);
+            // 
+            // mnuDataSeparator1
+            // 
+            this.mnuDataSeparator1.Name = "mnuDataSeparator1";
+            this.mnuDataSeparator1.Size = new System.Drawing.Size(186, 6);
+            // 
+            // mnuDataAutomaticallyUpdate
+            // 
+            this.mnuDataAutomaticallyUpdate.Checked = true;
+            this.mnuDataAutomaticallyUpdate.CheckOnClick = true;
+            this.mnuDataAutomaticallyUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuDataAutomaticallyUpdate.Name = "mnuDataAutomaticallyUpdate";
+            this.mnuDataAutomaticallyUpdate.Size = new System.Drawing.Size(189, 22);
+            this.mnuDataAutomaticallyUpdate.Text = "&Automatically Update";
+            this.mnuDataAutomaticallyUpdate.Click += new System.EventHandler(this.mnuDataAutomaticallyUpdate_Click);
+            // 
+            // mnuDataUpdateNow
+            // 
+            this.mnuDataUpdateNow.Name = "mnuDataUpdateNow";
+            this.mnuDataUpdateNow.Size = new System.Drawing.Size(189, 22);
+            this.mnuDataUpdateNow.Text = "&Update Now";
+            this.mnuDataUpdateNow.Click += new System.EventHandler(this.mnuDataUpdateNow_Click);
             // 
             // mnuHelp
             // 
@@ -213,6 +241,9 @@
         private System.Windows.Forms.ToolStripMenuItem mnuFileExportRawData;
         private System.Windows.Forms.ToolStripMenuItem mnuFileExportFormattedDatasheet;
         private System.Windows.Forms.SaveFileDialog diagExport;
+        private System.Windows.Forms.ToolStripSeparator mnuDataSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem mnuDataAutomaticallyUpdate;
+        private System.Windows.Forms.ToolStripMenuItem mnuDataUpdateNow;
     }
 }
 
