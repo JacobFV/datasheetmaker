@@ -16,6 +16,18 @@ namespace datasheetmaker
         public UnitsSI FindUnits(Dictionary<string, UnitsSI> variables) =>
             variables[Name];
 
+        public void Stringify(
+                StringBuilder builder, 
+                OperatorPrecedence caller, 
+                Dictionary<string, IExpression> variables
+            ) {
+            if (variables.ContainsKey(Name))
+                variables[Name].Stringify(builder, caller, variables);
+            else {
+                builder.Append(Name);
+            }
+        }
+
         public override string ToString() => Name;
     }
 }

@@ -47,7 +47,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataVariable.cs" />
+    <Compile Include="expressions\ILiteral.cs" />
     <Compile Include="expressions\NumberExpression.cs" />
+    <Compile Include="expressions\OperatorPrecedence.cs" />
+    <Compile Include="expressions\StringExpression.cs" />
     <Compile Include="expressions\SubtractExpression.cs" />
     <Compile Include="expressions\DivisionExpression.cs" />
     <Compile Include="expressions\ExpressionParser.cs" />

@@ -21,6 +21,22 @@ namespace datasheetmaker
             return left.Multiply(right.Recipricol());
         }
 
+        public void Stringify(
+                StringBuilder builder,
+                OperatorPrecedence caller,
+                Dictionary<string, IExpression> variables
+            ) {
+            if (caller < OperatorPrecedence.MultiplicationDivision)
+                builder.Append("(");
+
+            Left.Stringify(builder, OperatorPrecedence.MultiplicationDivision, variables);
+            builder.Append(" ÷ ");
+            Right.Stringify(builder, OperatorPrecedence.MultiplicationDivision, variables);
+
+            if (caller < OperatorPrecedence.MultiplicationDivision)
+                builder.Append(")");
+        }
+
         public override string ToString() =>
             $"{Left}÷{Right}";
     }

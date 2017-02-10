@@ -51,6 +51,7 @@
             this.txtUnits = new System.Windows.Forms.TextBox();
             this.txtName = new System.Windows.Forms.TextBox();
             this.chkBehavesLikeTrials = new System.Windows.Forms.CheckBox();
+            this.chkShowWork = new System.Windows.Forms.CheckBox();
             lblName = new System.Windows.Forms.Label();
             lblEquation = new System.Windows.Forms.Label();
             lblIndependentValues = new System.Windows.Forms.Label();
@@ -231,6 +232,7 @@
             // 
             // tabDependent
             // 
+            this.tabDependent.Controls.Add(this.chkShowWork);
             this.tabDependent.Controls.Add(this.txtEquation);
             this.tabDependent.Controls.Add(lblEquation);
             this.tabDependent.Location = new System.Drawing.Point(4, 4);
@@ -250,7 +252,7 @@
             this.txtEquation.Multiline = true;
             this.txtEquation.Name = "txtEquation";
             this.txtEquation.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.txtEquation.Size = new System.Drawing.Size(230, 170);
+            this.txtEquation.Size = new System.Drawing.Size(230, 146);
             this.txtEquation.TabIndex = 40;
             this.txtEquation.TextChanged += new System.EventHandler(this.txtEquation_TextChanged);
             // 
@@ -358,6 +360,20 @@
             this.chkBehavesLikeTrials.CheckedChanged += new System.EventHandler(this.chkBehavesLikeTrials_CheckedChanged);
             this.chkBehavesLikeTrials.VisibleChanged += new System.EventHandler(this.chkBehavesLikeTrials_VisibleChanged);
             // 
+            // chkShowWork
+            // 
+            this.chkShowWork.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkShowWork.Checked = true;
+            this.chkShowWork.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowWork.Location = new System.Drawing.Point(10, 180);
+            this.chkShowWork.Name = "chkShowWork";
+            this.chkShowWork.Size = new System.Drawing.Size(230, 24);
+            this.chkShowWork.TabIndex = 41;
+            this.chkShowWork.Text = "Show Work";
+            this.chkShowWork.UseVisualStyleBackColor = true;
+            this.chkShowWork.CheckedChanged += new System.EventHandler(this.chkShowWork_CheckedChanged);
+            // 
             // VariableEditorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -404,5 +420,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuVariablesMoveUp;
         private System.Windows.Forms.ToolStripMenuItem mnuVariablesMoveDown;
         private System.Windows.Forms.CheckBox chkBehavesLikeTrials;
+        private System.Windows.Forms.CheckBox chkShowWork;
     }
 }

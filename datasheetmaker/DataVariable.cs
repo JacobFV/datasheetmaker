@@ -44,6 +44,8 @@ namespace datasheetmaker
 
         public bool BehavesLikeTrials { get; set; } = false;
 
+        public bool ShowWork { get; set; } = true;
+
         public override string ToString() => Name;
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace datasheetmaker
 {
-    public sealed class NumberExpression : IExpression
+    public sealed class NumberExpression : IExpression, ILiteral<double>
     {
         public double Value { get; set; }
         public UnitsSI Units { get; set; }
@@ -16,6 +16,16 @@ namespace datasheetmaker
 
         public UnitsSI FindUnits(Dictionary<string, UnitsSI> variables) =>
             Units;
+
+        public void Stringify(
+                StringBuilder builder, 
+                OperatorPrecedence caller,
+                Dictionary<string, IExpression> variables
+            ) {
+            builder.Append(Value.ToString("0.####"));
+            //builder.Append(" ");
+            builder.Append(Units);
+        }
 
         static readonly char[] whitespace = " \t\n\r\f\v".ToCharArray();
         static readonly char[] variablenamechars = "^-+1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM._".ToCharArray();

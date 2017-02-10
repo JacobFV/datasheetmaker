@@ -37,6 +37,7 @@ namespace datasheetmaker
                 lstIndependentValues.DataSource = SelectedVariable.Values;
                 chkBehavesLikeTrials.Checked = SelectedVariable.BehavesLikeTrials;
                 txtEquation.Text = SelectedVariable.Equation;
+                chkShowWork.Checked = SelectedVariable.ShowWork;
             }
         }
 
@@ -151,6 +152,10 @@ namespace datasheetmaker
 
         private void chkBehavesLikeTrials_CheckedChanged(object sender, EventArgs e) {
             SelectedVariable.BehavesLikeTrials = chkBehavesLikeTrials.Checked;
+        }
+
+        private void chkShowWork_CheckedChanged(object sender, EventArgs e) {
+            SelectedVariable.ShowWork = chkShowWork.Checked;
         }
     }
 }

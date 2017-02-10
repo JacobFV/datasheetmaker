@@ -11,5 +11,11 @@ namespace datasheetmaker
         UnitsSI FindUnits(Dictionary<string, UnitsSI> variables);
 
         double Evaluate(Dictionary<string, double> variables);
+
+        void Stringify(
+                StringBuilder builder,
+                OperatorPrecedence caller,
+                Dictionary<string, IExpression> variables
+            );
     }
 }

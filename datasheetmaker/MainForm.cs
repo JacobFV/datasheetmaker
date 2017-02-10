@@ -655,51 +655,133 @@ namespace datasheetmaker
                             new[] {
                                 string.Join(
                                         diagExport.FilterIndex == 2 ? "," : "\t",
-                                        variables.Select(variable => variable.Name)
+                                        variables
+                                            .Select(
+                                                    variable => {
+                                                        if(string.IsNullOrWhiteSpace(variable.Equation) ||
+                                                            !variable.ShowWork ||
+                                                            variable.Expression == null)
+                                                            return variable.Name;
+
+                                                        var equationbuilder  =
+                                                            new StringBuilder();
+
+                                                        variable.Expression.Stringify(equationbuilder, OperatorPrecedence.Top, new Dictionary<string, IExpression>());
+
+                                                        return
+                                                            variable.Name +
+                                                            " = " +
+                                                            equationbuilder.ToString();
+                                                    }
+                                                )
                                     )
                             }.Concat(
                                 Enumerable
                                     .Range(0, dtaGrid.Rows.Count)
                                     .Select(i => new { row = dtaGrid.Rows[i], i })
                                     .Select(
-                                            row =>
-                                                string.Join(
-                                                        ",",
-                                                        row
-                                                            .row
-                                                            .Cells
-                                                            .Cast<DataGridViewCell>()
-                                                            .Select(
-                                                                    (cell, j) => {
-                                                                        var variable =
-                                                                            variables[cell.ColumnIndex];
+                                            row => {
+                                                var variablevalues =
+                                                    row
+                                                        .row
+                                                        .Cells
+                                                        .Cast<DataGridViewCell>()
+                                                        .Select(
+                                                                (cell, j) => {
+                                                                    var variable =
+                                                                        variables[cell.ColumnIndex];
 
-                                                                        var ordinate =
-                                                                            collectedtrials[row.i];
+                                                                    var numexp =
+                                                                        NumberExpression.Parse(cell.FormattedValue.ToString());
 
-                                                                        string equ = null;
-
-                                                                        switch (ordinate.Value) {
-                                                                            case null:
-                                                                                if (variable.Type == VariableType.Dependent)
-                                                                                    equ = variable.Expression.ToString();
-                                                                                break;
-
-                                                                            default:
-                                                                                if (j >= dimensions.Length) {
-                                                                                    var k_times = ordinate.Key.Values.Count(_ => _.Any(char.IsDigit));
-                                                                                    equ = collectedtrials[row.i].Value + "{above " + ordinate.Key.Values.Count(str => str.Any(char.IsDigit)).ToString() + "}";
+                                                                    if (numexp == null)
+                                                                        return new KeyValuePair<string, IExpression>(
+                                                                                variable.Name,
+                                                                                new StringExpression {
+                                                                                    Value = cell.FormattedValue.ToString()
                                                                                 }
-                                                                                break;
+                                                                            );
+
+                                                                    return
+                                                                        new KeyValuePair<string, IExpression>(
+                                                                                variable.Name,
+                                                                                numexp
+                                                                            );
+                                                                }
+                                                            )
+                                                        .Where(_ => _.Value != null)
+                                                        .ToArray();
+
+                                                var variables_map =
+                                                    new Dictionary<string, IExpression>();
+
+                                                var variable_map_value =
+                                                    new Dictionary<string, double>();
+
+                                                var variable_map_units =
+                                                    new Dictionary<string, UnitsSI>();
+
+                                                foreach (var variablevalue in variablevalues) {
+                                                    var numexp =
+                                                        variablevalue.Value as NumberExpression;
+
+                                                    variables_map.Add(variablevalue.Key, variablevalue.Value);
+
+                                                    if (numexp != null) {
+                                                        variable_map_value.Add(variablevalue.Key, numexp.Value);
+                                                        variable_map_units.Add(variablevalue.Key, numexp.Units);
+                                                    }
+                                                }
+
+                                                return
+                                                    string.Join(
+                                                            ",",
+                                                            row
+                                                                .row
+                                                                .Cells
+                                                                .Cast<DataGridViewCell>()
+                                                                .Select(
+                                                                        (cell, j) => {
+                                                                            var variable =
+                                                                                variables[cell.ColumnIndex];
+
+                                                                            var ordinate =
+                                                                                collectedtrials[row.i];
+
+                                                                            string equ = null;
+
+                                                                            switch (ordinate.Value) {
+                                                                                case null:
+                                                                                    if (variable.Type == VariableType.Dependent) {
+                                                                                        var expressionbuilder =
+                                                                                            new StringBuilder();
+
+                                                                                        variable.Expression.Stringify(
+                                                                                                expressionbuilder,
+                                                                                                OperatorPrecedence.Top,
+                                                                                                variables_map
+                                                                                            );
+
+                                                                                        equ = expressionbuilder.ToString();
+                                                                                    }
+                                                                                    break;
+
+                                                                                default:
+                                                                                    if (j >= dimensions.Length) {
+                                                                                        var k_times = ordinate.Key.Values.Count(_ => _.Any(char.IsDigit));
+                                                                                        equ = collectedtrials[row.i].Value + "{above " + ordinate.Key.Values.Count(str => str.Any(char.IsDigit)).ToString() + "}";
+                                                                                    }
+                                                                                    break;
+                                                                            }
+
+                                                                            if (equ != null)
+                                                                                return cell.FormattedValue + " = " + equ;
+
+                                                                            return cell.FormattedValue;
                                                                         }
-
-                                                                        if (equ != null)
-                                                                            return cell.FormattedValue + " = " + equ;
-
-                                                                        return cell.FormattedValue;
-                                                                    }
-                                                                )
-                                                    )
+                                                                    )
+                                                        );
+                                            }
                                         )
                                 )
                         );

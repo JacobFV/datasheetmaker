@@ -24,6 +24,22 @@ namespace datasheetmaker
             return left;
         }
 
+        public void Stringify(
+                StringBuilder builder,
+                OperatorPrecedence caller,
+                Dictionary<string, IExpression> variables
+            ) {
+            if (caller < OperatorPrecedence.AdditionSubtraction)
+                builder.Append("(");
+
+            Left.Stringify(builder, OperatorPrecedence.AdditionSubtraction, variables);
+            builder.Append(" - ");
+            Right.Stringify(builder, OperatorPrecedence.AdditionSubtraction, variables);
+
+            if (caller < OperatorPrecedence.AdditionSubtraction)
+                builder.Append(")");
+        }
+
         public override string ToString() =>
             $"{Left}-{Right}";
     }
