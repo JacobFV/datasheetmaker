@@ -44,6 +44,7 @@
             this.diagOpen = new System.Windows.Forms.OpenFileDialog();
             this.diagSave = new System.Windows.Forms.SaveFileDialog();
             this.diagExport = new System.Windows.Forms.SaveFileDialog();
+            this.mnuDataAutomaticallyAverage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtaGrid)).BeginInit();
             this.SuspendLayout();
@@ -122,6 +123,7 @@
             this.mnuDataEditVariables,
             this.mnuDataSeparator1,
             this.mnuDataAutomaticallyUpdate,
+            this.mnuDataAutomaticallyAverage,
             this.mnuDataUpdateNow});
             this.mnuData.Name = "mnuData";
             this.mnuData.Size = new System.Drawing.Size(43, 20);
@@ -130,14 +132,14 @@
             // mnuDataEditVariables
             // 
             this.mnuDataEditVariables.Name = "mnuDataEditVariables";
-            this.mnuDataEditVariables.Size = new System.Drawing.Size(189, 22);
+            this.mnuDataEditVariables.Size = new System.Drawing.Size(194, 22);
             this.mnuDataEditVariables.Text = "&Edit Variables";
             this.mnuDataEditVariables.Click += new System.EventHandler(this.mnuDataEditVariables_Click);
             // 
             // mnuDataSeparator1
             // 
             this.mnuDataSeparator1.Name = "mnuDataSeparator1";
-            this.mnuDataSeparator1.Size = new System.Drawing.Size(186, 6);
+            this.mnuDataSeparator1.Size = new System.Drawing.Size(191, 6);
             // 
             // mnuDataAutomaticallyUpdate
             // 
@@ -145,14 +147,14 @@
             this.mnuDataAutomaticallyUpdate.CheckOnClick = true;
             this.mnuDataAutomaticallyUpdate.CheckState = System.Windows.Forms.CheckState.Checked;
             this.mnuDataAutomaticallyUpdate.Name = "mnuDataAutomaticallyUpdate";
-            this.mnuDataAutomaticallyUpdate.Size = new System.Drawing.Size(189, 22);
+            this.mnuDataAutomaticallyUpdate.Size = new System.Drawing.Size(194, 22);
             this.mnuDataAutomaticallyUpdate.Text = "&Automatically Update";
             this.mnuDataAutomaticallyUpdate.Click += new System.EventHandler(this.mnuDataAutomaticallyUpdate_Click);
             // 
             // mnuDataUpdateNow
             // 
             this.mnuDataUpdateNow.Name = "mnuDataUpdateNow";
-            this.mnuDataUpdateNow.Size = new System.Drawing.Size(189, 22);
+            this.mnuDataUpdateNow.Size = new System.Drawing.Size(194, 22);
             this.mnuDataUpdateNow.Text = "&Update Now";
             this.mnuDataUpdateNow.Click += new System.EventHandler(this.mnuDataUpdateNow_Click);
             // 
@@ -206,6 +208,17 @@
             this.diagExport.Filter = "Raw Data (*.csv)|*.csv|Formatted Data (*.csv)|*.csv|Formatted Data (*.txt)|*.txt";
             this.diagExport.FileOk += new System.ComponentModel.CancelEventHandler(this.diagExport_FileOk);
             // 
+            // mnuDataAutomaticallyAverage
+            // 
+            this.mnuDataAutomaticallyAverage.AutoToolTip = true;
+            this.mnuDataAutomaticallyAverage.Checked = true;
+            this.mnuDataAutomaticallyAverage.CheckOnClick = true;
+            this.mnuDataAutomaticallyAverage.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.mnuDataAutomaticallyAverage.Name = "mnuDataAutomaticallyAverage";
+            this.mnuDataAutomaticallyAverage.Size = new System.Drawing.Size(194, 22);
+            this.mnuDataAutomaticallyAverage.Text = "Automatically A&verage";
+            this.mnuDataAutomaticallyAverage.Click += new System.EventHandler(this.mnuDataAutomaticallyAverage_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -247,6 +260,7 @@
         private System.Windows.Forms.ToolStripSeparator mnuDataSeparator1;
         private System.Windows.Forms.ToolStripMenuItem mnuDataAutomaticallyUpdate;
         private System.Windows.Forms.ToolStripMenuItem mnuDataUpdateNow;
+        private System.Windows.Forms.ToolStripMenuItem mnuDataAutomaticallyAverage;
     }
 }
 

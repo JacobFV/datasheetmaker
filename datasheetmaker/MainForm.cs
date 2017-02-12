@@ -135,11 +135,16 @@ namespace datasheetmaker
         }
 
         bool updating = false;
+        bool updating_averages = false;
         void UpdateAverages() {
             if (updating)
                 return;
 
+            if (updating_averages)
+                return;
+
             updating = true;
+            updating_averages = true;
 
             var dimensions =
                 variables.Where(_ => _.Type == VariableType.Dimensional).ToArray();
@@ -339,13 +344,14 @@ namespace datasheetmaker
             }
 
             updating = false;
+            updating_averages = false;
         }
 
         void UpdateVariables(int rowindex) {
             if (updating)
                 return;
 
-            //updating = true;
+            updating = true;
 
             var row = dtaGrid.Rows[rowindex];
 
@@ -357,7 +363,7 @@ namespace datasheetmaker
                     (DataVariable)dtaGrid.Columns[i].Tag;
 
                 var cell =
-                    row.Cells[i].Value?.ToString();
+                    row.Cells[i].FormattedValue?.ToString();
 
                 if (cell != null) {
                     if (variable.Type == VariableType.Dependent) {
@@ -379,7 +385,7 @@ namespace datasheetmaker
                 }
             }
 
-            //updating = false;
+            updating = false;
         }
 
         IEnumerable<int> RangeInts(int start, int skip, int times) {
@@ -809,6 +815,10 @@ namespace datasheetmaker
 
         private void mnuDataAutomaticallyUpdate_Click(object sender, EventArgs e) {
             updating = !mnuDataAutomaticallyUpdate.Checked;
+        }
+
+        private void mnuDataAutomaticallyAverage_Click(object sender, EventArgs e) {
+            updating_averages = !mnuDataAutomaticallyAverage.Checked;
         }
 
         private void mnuDataUpdateNow_Click(object sender, EventArgs e) {
