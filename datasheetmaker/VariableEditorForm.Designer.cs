@@ -31,6 +31,8 @@
             System.Windows.Forms.Label lblIndependentValues;
             System.Windows.Forms.Label lblUnits;
             System.Windows.Forms.Label lblType;
+            System.Windows.Forms.Label lblValue;
+            System.Windows.Forms.Label lblComments;
             this.lstVariables = new System.Windows.Forms.ListBox();
             this.mnuVariables = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.mnuVariablesMoveUp = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,8 +43,10 @@
             this.cboType = new System.Windows.Forms.ComboBox();
             this.tabSettings = new System.Windows.Forms.TabControl();
             this.tabDependent = new System.Windows.Forms.TabPage();
+            this.chkShowWork = new System.Windows.Forms.CheckBox();
             this.txtEquation = new System.Windows.Forms.TextBox();
             this.tabDimensional = new System.Windows.Forms.TabPage();
+            this.txtIndependentComments = new System.Windows.Forms.TextBox();
             this.txtIndependentValue = new System.Windows.Forms.TextBox();
             this.btnDeleteIndependentValue = new System.Windows.Forms.Button();
             this.btnAddIndependentValue = new System.Windows.Forms.Button();
@@ -51,12 +55,14 @@
             this.txtUnits = new System.Windows.Forms.TextBox();
             this.txtName = new System.Windows.Forms.TextBox();
             this.chkBehavesLikeTrials = new System.Windows.Forms.CheckBox();
-            this.chkShowWork = new System.Windows.Forms.CheckBox();
+            this.chkShowComments = new System.Windows.Forms.CheckBox();
             lblName = new System.Windows.Forms.Label();
             lblEquation = new System.Windows.Forms.Label();
             lblIndependentValues = new System.Windows.Forms.Label();
             lblUnits = new System.Windows.Forms.Label();
             lblType = new System.Windows.Forms.Label();
+            lblValue = new System.Windows.Forms.Label();
+            lblComments = new System.Windows.Forms.Label();
             this.mnuVariables.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -113,6 +119,26 @@
             lblType.TabIndex = 29;
             lblType.Text = "&Type:";
             lblType.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // lblValue
+            // 
+            lblValue.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            lblValue.Location = new System.Drawing.Point(10, 132);
+            lblValue.Name = "lblValue";
+            lblValue.Size = new System.Drawing.Size(70, 20);
+            lblValue.TabIndex = 42;
+            lblValue.Text = "&Value:";
+            lblValue.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // lblComments
+            // 
+            lblComments.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            lblComments.Location = new System.Drawing.Point(10, 157);
+            lblComments.Name = "lblComments";
+            lblComments.Size = new System.Drawing.Size(70, 20);
+            lblComments.TabIndex = 46;
+            lblComments.Text = "&Comments";
+            lblComments.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lstVariables
             // 
@@ -243,6 +269,20 @@
             this.tabDependent.Text = "Dependent";
             this.tabDependent.UseVisualStyleBackColor = true;
             // 
+            // chkShowWork
+            // 
+            this.chkShowWork.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkShowWork.Checked = true;
+            this.chkShowWork.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowWork.Location = new System.Drawing.Point(10, 180);
+            this.chkShowWork.Name = "chkShowWork";
+            this.chkShowWork.Size = new System.Drawing.Size(230, 24);
+            this.chkShowWork.TabIndex = 41;
+            this.chkShowWork.Text = "Show Work";
+            this.chkShowWork.UseVisualStyleBackColor = true;
+            this.chkShowWork.CheckedChanged += new System.EventHandler(this.chkShowWork_CheckedChanged);
+            // 
             // txtEquation
             // 
             this.txtEquation.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -259,6 +299,10 @@
             // tabDimensional
             // 
             this.tabDimensional.BackColor = System.Drawing.Color.Transparent;
+            this.tabDimensional.Controls.Add(this.chkShowComments);
+            this.tabDimensional.Controls.Add(this.txtIndependentComments);
+            this.tabDimensional.Controls.Add(lblComments);
+            this.tabDimensional.Controls.Add(lblValue);
             this.tabDimensional.Controls.Add(this.txtIndependentValue);
             this.tabDimensional.Controls.Add(this.btnDeleteIndependentValue);
             this.tabDimensional.Controls.Add(this.btnAddIndependentValue);
@@ -272,13 +316,23 @@
             this.tabDimensional.Text = "Dimensional";
             this.tabDimensional.UseVisualStyleBackColor = true;
             // 
+            // txtIndependentComments
+            // 
+            this.txtIndependentComments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtIndependentComments.Location = new System.Drawing.Point(86, 158);
+            this.txtIndependentComments.Name = "txtIndependentComments";
+            this.txtIndependentComments.Size = new System.Drawing.Size(154, 20);
+            this.txtIndependentComments.TabIndex = 47;
+            this.txtIndependentComments.TextChanged += new System.EventHandler(this.txtIndependentComments_TextChanged);
+            // 
             // txtIndependentValue
             // 
             this.txtIndependentValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtIndependentValue.Location = new System.Drawing.Point(10, 187);
+            this.txtIndependentValue.Location = new System.Drawing.Point(86, 132);
             this.txtIndependentValue.Name = "txtIndependentValue";
-            this.txtIndependentValue.Size = new System.Drawing.Size(230, 20);
+            this.txtIndependentValue.Size = new System.Drawing.Size(154, 20);
             this.txtIndependentValue.TabIndex = 43;
             this.txtIndependentValue.TextChanged += new System.EventHandler(this.txtIndependentValue_TextChanged);
             // 
@@ -309,11 +363,12 @@
             this.lstIndependentValues.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.lstIndependentValues.DisplayMember = "Key";
             this.lstIndependentValues.FormattingEnabled = true;
             this.lstIndependentValues.IntegralHeight = false;
             this.lstIndependentValues.Location = new System.Drawing.Point(10, 37);
             this.lstIndependentValues.Name = "lstIndependentValues";
-            this.lstIndependentValues.Size = new System.Drawing.Size(230, 146);
+            this.lstIndependentValues.Size = new System.Drawing.Size(230, 89);
             this.lstIndependentValues.TabIndex = 42;
             this.lstIndependentValues.SelectedIndexChanged += new System.EventHandler(this.lstIndependentValues_SelectedIndexChanged);
             // 
@@ -360,19 +415,17 @@
             this.chkBehavesLikeTrials.CheckedChanged += new System.EventHandler(this.chkBehavesLikeTrials_CheckedChanged);
             this.chkBehavesLikeTrials.VisibleChanged += new System.EventHandler(this.chkBehavesLikeTrials_VisibleChanged);
             // 
-            // chkShowWork
+            // chkShowComments
             // 
-            this.chkShowWork.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.chkShowComments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkShowWork.Checked = true;
-            this.chkShowWork.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowWork.Location = new System.Drawing.Point(10, 180);
-            this.chkShowWork.Name = "chkShowWork";
-            this.chkShowWork.Size = new System.Drawing.Size(230, 24);
-            this.chkShowWork.TabIndex = 41;
-            this.chkShowWork.Text = "Show Work";
-            this.chkShowWork.UseVisualStyleBackColor = true;
-            this.chkShowWork.CheckedChanged += new System.EventHandler(this.chkShowWork_CheckedChanged);
+            this.chkShowComments.Location = new System.Drawing.Point(6, 180);
+            this.chkShowComments.Name = "chkShowComments";
+            this.chkShowComments.Size = new System.Drawing.Size(171, 24);
+            this.chkShowComments.TabIndex = 48;
+            this.chkShowComments.Text = "Show Comments";
+            this.chkShowComments.UseVisualStyleBackColor = true;
+            this.chkShowComments.CheckedChanged += new System.EventHandler(this.chkShowComments_CheckedChanged);
             // 
             // VariableEditorForm
             // 
@@ -421,5 +474,7 @@
         private System.Windows.Forms.ToolStripMenuItem mnuVariablesMoveDown;
         private System.Windows.Forms.CheckBox chkBehavesLikeTrials;
         private System.Windows.Forms.CheckBox chkShowWork;
+        private System.Windows.Forms.TextBox txtIndependentComments;
+        private System.Windows.Forms.CheckBox chkShowComments;
     }
 }

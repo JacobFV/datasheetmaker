@@ -113,7 +113,7 @@ namespace datasheetmaker
                 return;
 
             var kvps =
-                dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
+                dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __.Key))).ToArray();
             
             foreach (var ordinates in Combinations(kvps)) {
                 var row = new DataGridViewRow();
@@ -158,7 +158,7 @@ namespace datasheetmaker
             var units = measurements.Concat(calculations).Select(_ => _.Units).ToArray();
 
             var kvps =
-                dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
+                dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __.Key))).ToArray();
             
             var i = 0;
             foreach (var ordinates in Combinations(kvps)) {
@@ -174,7 +174,7 @@ namespace datasheetmaker
                                 j + 1 != ordinates.Length ?
                                     Combinations(kvps.Skip(j + 1).ToArray()).Count() :
                                     1;
-                            var k_times = ordinate.Key.Values.Count(_ => _.Any(char.IsDigit));
+                            var k_times = ordinate.Key.Values.Count(_ => _.Key.Any(char.IsDigit));
                             var k_start = i - k_skip * k_times;
 
                             var collection =
@@ -440,18 +440,36 @@ namespace datasheetmaker
                         xvariable.Attribute("behaves-like-trial") != null ?
                             bool.Parse(xvariable.Attribute("behaves-like-trial").Value) :
                             false;
+                    variable.ShowWork =
+                        xvariable.Attribute("show-work") != null ?
+                            bool.Parse(xvariable.Attribute("show-work").Value) :
+                            false;
+                    variable.ShowComments =
+                        xvariable.Attribute("show-comments") != null ?
+                            bool.Parse(xvariable.Attribute("show-comments").Value) :
+                            false;
 
                     if (xvariable.Attribute("equation") != null)
                         variable.Equation = xvariable.Attribute("equation").Value;
 
-                    foreach (var xvalue in xvariable.Elements("value"))
-                        variable.Values.Add(xvalue.Value);
+                    foreach (var xvalue in xvariable.Elements("value")) {
+                        var val =
+                            xvalue.Value;
+
+                        var comments =
+                            xvalue
+                                .Attribute("comments")
+                                ?.Value ??
+                                "";
+
+                        variable.Values.Add(new KeyValuePair<string, string>(val, comments));
+                    }
 
                     variables.Add(variable);
                 }
 
                 updating = true;
-
+                
                 SetupNewVariables();
                 
                 foreach (var xmeasurement in xdatasheet.Element("measurements").Elements("variable")) {
@@ -482,12 +500,22 @@ namespace datasheetmaker
                     file.WriteAttributeString("units", variable.Units);
                     file.WriteAttributeString("type", variable.Type.ToString());
                     file.WriteAttributeString("behaves-like-trial", variable.BehavesLikeTrials.ToString());
+                    file.WriteAttributeString("show-comments", variable.ShowComments.ToString());
+                    file.WriteAttributeString("show-work", variable.ShowWork.ToString());
 
                     if (variable.Equation != "")
                         file.WriteAttributeString("equation", variable.Equation);
 
-                    foreach (var value in variable.Values)
-                        file.WriteElementString("value", value);
+                    foreach (var value in variable.Values) {
+                        file.WriteStartElement("value");
+
+                        if (!string.IsNullOrWhiteSpace(value.Value))
+                            file.WriteAttributeString("comments", value.Value);
+
+                        file.WriteValue(value.Key);
+
+                        file.WriteEndElement();
+                    }
 
                     file.WriteEndElement();
                 }
@@ -655,7 +683,7 @@ namespace datasheetmaker
                     var units = measurements.Concat(calculations).Select(_ => _.Units).ToArray();
 
                     var kvps =
-                        dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __))).ToArray();
+                        dimensions.Select(_ => _.Values.Select(__ => new KeyValuePair<DataVariable, string>(_, __.Key + "(" + __.Value + ")"))).ToArray();
 
                     var collectedtrials =
                         Combinations(kvps)
@@ -708,28 +736,40 @@ namespace datasheetmaker
                                                         .Cast<DataGridViewCell>()
                                                         .Select(
                                                                 (cell, j) => {
-                                                                    var variable =
-                                                                        variables[cell.ColumnIndex];
+                                                                var variable =
+                                                                    variables[cell.ColumnIndex];
 
-                                                                    var numexp =
-                                                                        NumberExpression.Parse(cell.FormattedValue.ToString());
+                                                                var val =
+                                                                    cell.FormattedValue.ToString();
 
+                                                                var numexp =
+                                                                    NumberExpression.Parse(val);
+
+                                                                var comments =
+                                                                    (variable.Type == VariableType.Dimensional ? variable.Values.FirstOrDefault(_ => _.Key == val).Value : null);
+                                                                    
                                                                     if (numexp == null)
-                                                                        return new KeyValuePair<string, IExpression>(
+                                                                        return new KeyValuePair<string, KeyValuePair<string, IExpression>>(
                                                                                 variable.Name,
-                                                                                new StringExpression {
-                                                                                    Value = cell.FormattedValue.ToString()
-                                                                                }
+                                                                                new KeyValuePair<string, IExpression>(
+                                                                                        comments,
+                                                                                        new StringExpression {
+                                                                                            Value = cell.FormattedValue.ToString()
+                                                                                        }
+                                                                                    )
                                                                             );
 
                                                                     return
-                                                                        new KeyValuePair<string, IExpression>(
+                                                                        new KeyValuePair<string, KeyValuePair<string, IExpression>>(
                                                                                 variable.Name,
-                                                                                numexp
+                                                                                new KeyValuePair<string, IExpression>(
+                                                                                        comments,
+                                                                                        numexp
+                                                                                    )
                                                                             );
                                                                 }
                                                             )
-                                                        .Where(_ => _.Value != null)
+                                                        .Where(_ => _.Key != null)
                                                         .ToArray();
 
                                                 var variables_map =
@@ -743,9 +783,9 @@ namespace datasheetmaker
 
                                                 foreach (var variablevalue in variablevalues) {
                                                     var numexp =
-                                                        variablevalue.Value as NumberExpression;
+                                                        variablevalue.Value.Value as NumberExpression;
 
-                                                    variables_map.Add(variablevalue.Key, variablevalue.Value);
+                                                    variables_map.Add(variablevalue.Key, variablevalue.Value.Value);
 
                                                     if (numexp != null) {
                                                         variable_map_value.Add(variablevalue.Key, numexp.Value);
@@ -769,7 +809,7 @@ namespace datasheetmaker
                                                                                 collectedtrials[row.i];
 
                                                                             string equ = null;
-
+                                                                            
                                                                             switch (ordinate.Value) {
                                                                                 case null:
                                                                                     if (variable.Type == VariableType.Dependent) {
@@ -788,14 +828,18 @@ namespace datasheetmaker
 
                                                                                 default:
                                                                                     if (j >= dimensions.Length) {
-                                                                                        var k_times = ordinate.Key.Values.Count(_ => _.Any(char.IsDigit));
-                                                                                        equ = collectedtrials[row.i].Value + "{above " + ordinate.Key.Values.Count(str => str.Any(char.IsDigit)).ToString() + "}";
+                                                                                        var k_times = ordinate.Key.Values.Count(_ => _.Key.Any(char.IsDigit));
+                                                                                        equ = collectedtrials[row.i].Value + "{above " + ordinate.Key.Values.Count(val => val.Key.Any(char.IsDigit)).ToString() + "}";
                                                                                     }
                                                                                     break;
                                                                             }
 
                                                                             if (equ != null)
                                                                                 return cell.FormattedValue + " = " + equ;
+                                                                            else if (
+                                                                                variable.Type == VariableType.Dimensional &&
+                                                                                variable.ShowComments)
+                                                                                return $"{cell.FormattedValue} ({variable.Values.FirstOrDefault(_ => _.Key == cell.FormattedValue.ToString()).Value})";
 
                                                                             return cell.FormattedValue;
                                                                         }

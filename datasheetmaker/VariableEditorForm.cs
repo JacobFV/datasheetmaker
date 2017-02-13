@@ -38,6 +38,7 @@ namespace datasheetmaker
                 chkBehavesLikeTrials.Checked = SelectedVariable.BehavesLikeTrials;
                 txtEquation.Text = SelectedVariable.Equation;
                 chkShowWork.Checked = SelectedVariable.ShowWork;
+                chkShowComments.Checked = SelectedVariable.ShowComments;
             }
         }
 
@@ -94,7 +95,7 @@ namespace datasheetmaker
         }
 
         private void btnAddIndependentValue_Click(object sender, EventArgs e) {
-            SelectedVariable.Values.Add("1");
+            SelectedVariable.Values.Add(new KeyValuePair<string, string>("1", ""));
         }
 
         private void btnDeleteIndependentValue_Click(object sender, EventArgs e) {
@@ -105,13 +106,30 @@ namespace datasheetmaker
 
         private void txtIndependentValue_TextChanged(object sender, EventArgs e) {
             if (lstIndependentValues.SelectedIndex != -1) {
-                SelectedVariable.Values[lstIndependentValues.SelectedIndex] = txtIndependentValue.Text;
+                var kvp =
+                    SelectedVariable.Values[lstIndependentValues.SelectedIndex];
+
+                kvp = new KeyValuePair<string, string>(txtIndependentValue.Text, kvp.Value);
+
+                SelectedVariable.Values[lstIndependentValues.SelectedIndex] = kvp;
+            }
+        }
+
+        private void txtIndependentComments_TextChanged(object sender, EventArgs e) {
+            if (lstIndependentValues.SelectedIndex != -1) {
+                var kvp =
+                    SelectedVariable.Values[lstIndependentValues.SelectedIndex];
+
+                kvp = new KeyValuePair<string, string>(kvp.Key, txtIndependentComments.Text);
+
+                SelectedVariable.Values[lstIndependentValues.SelectedIndex] = kvp;
             }
         }
 
         private void lstIndependentValues_SelectedIndexChanged(object sender, EventArgs e) {
             if (lstIndependentValues.SelectedIndex != -1) {
-                txtIndependentValue.Text = SelectedVariable.Values[lstIndependentValues.SelectedIndex];
+                txtIndependentValue.Text = SelectedVariable.Values[lstIndependentValues.SelectedIndex].Key;
+                txtIndependentComments.Text = SelectedVariable.Values[lstIndependentValues.SelectedIndex].Value;
             }
         }
 
@@ -156,6 +174,10 @@ namespace datasheetmaker
 
         private void chkShowWork_CheckedChanged(object sender, EventArgs e) {
             SelectedVariable.ShowWork = chkShowWork.Checked;
+        }
+
+        private void chkShowComments_CheckedChanged(object sender, EventArgs e) {
+            SelectedVariable.ShowComments = chkShowComments.Checked;
         }
     }
 }

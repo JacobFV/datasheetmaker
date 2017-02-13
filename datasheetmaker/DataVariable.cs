@@ -15,10 +15,10 @@ namespace datasheetmaker
         public VariableType Type { get; set; } = VariableType.Dimensional;
 
         /// <summary>
-        /// For independent variables
+        /// For dimensional variables
         /// </summary>
-        public BindingList<string> Values { get; } =
-            new BindingList<string>();
+        public BindingList<KeyValuePair<string, string>> Values { get; } =
+            new BindingList<KeyValuePair<string, string>>();
 
         IExpression expression;
         public IExpression Expression {
@@ -45,6 +45,7 @@ namespace datasheetmaker
         public bool BehavesLikeTrials { get; set; } = false;
 
         public bool ShowWork { get; set; } = true;
+        public bool ShowComments { get; set; } = false;
 
         public override string ToString() => Name;
     }
