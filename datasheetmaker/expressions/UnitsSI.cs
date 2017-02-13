@@ -29,7 +29,7 @@ namespace datasheetmaker
                                     new KeyValuePair<string, Tuple<int, int>>(
                                             unitdegree.Key,
                                             new Tuple<int, int>(
-                                                    -unitdegree.Value.Item1,
+                                                    unitdegree.Value.Item1,
                                                     -unitdegree.Value.Item2
                                                 )
                                         )

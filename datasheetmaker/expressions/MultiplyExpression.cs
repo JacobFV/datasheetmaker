@@ -18,7 +18,7 @@ namespace datasheetmaker
             var left = Left.FindUnits(variables);
             var right = Right.FindUnits(variables);
 
-            return left.Multiply(right.Recipricol());
+            return left.Multiply(right);
         }
 
         public void Stringify(
