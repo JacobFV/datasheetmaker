@@ -178,7 +178,7 @@ namespace datasheetmaker
                             var k_start = i - k_skip * k_times;
 
                             var collection =
-                                Combinations(
+                                FlipDimensions(
                                         RangeInts(k_start, k_skip, k_times)
                                             .Select(
                                                     k =>
@@ -194,7 +194,7 @@ namespace datasheetmaker
                                                                             cell.Value.ToString() :
                                                                             null
                                                                 )
-                                                            .Where(_ => _ != null)
+                                                            //.Where(_ => _ != null)
                                                             .ToArray()
                                                 )
                                             .ToArray()
@@ -205,10 +205,12 @@ namespace datasheetmaker
                                 collection
                                     .Select(
                                             column => (
-                                                from x in column
-                                                let k = NumberExpression.Parse(x)
-                                                where k != null
-                                                select k.Value
+                                                    from x in column
+                                                    let k = NumberExpression.Parse(x)
+                                                    select
+                                                        k != null ?
+                                                            k.Value :
+                                                            0
                                                 ).ToArray()
                                         )
                                     .ToArray();
@@ -220,7 +222,12 @@ namespace datasheetmaker
                                 case "Mean":
                                     for (int m = 0; m < answers.Length; m++) {
                                         try {
-                                            answers[m] = collection_nums[m].Average().ToString("0.#####");
+                                            var val = collection_nums[m].Average();
+                                            //if (Math.Abs(val - 1.5) < 0.01) {
+                                            //    System.Diagnostics.Debugger.Break();
+                                            //}
+
+                                            answers[m] = val.ToString("0.#####");
                                             if (units[m] != "")
                                                 answers[m] += " " + units[m];
                                         }
@@ -398,6 +405,21 @@ namespace datasheetmaker
             }
         }
 
+        IEnumerable<T[]> FlipDimensions<T>(T[][] sources, int i = 0, int j = -1) {
+            if (j == -1) {
+                for (j = 0; j < sources[0].Length; j++) {
+                    foreach (var flip in FlipDimensions(sources, i + 1, j))
+                        yield return new[] { sources[0][j] }.Concat(flip).ToArray();
+                }
+            }
+            else if (i == sources.Length)
+                yield return new T[0];
+            else {
+                foreach (var flip in FlipDimensions(sources, i + 1, j))
+                    yield return new[] { sources[i][j] }.Concat(flip).ToArray();
+            }
+        }
+
         IEnumerable<T[]> Combinations<T>(IEnumerable<T>[] sources, int i = 0) {
             if (i == sources.Length)
                 yield return new T[0];
@@ -489,8 +511,8 @@ namespace datasheetmaker
                     }
                 }
 
-                updating = mnuDataAutomaticallyUpdate.Checked;
-                updating_averages = mnuDataAutomaticallyAverage.Checked;
+                updating = !mnuDataAutomaticallyUpdate.Checked;
+                updating_averages = !mnuDataAutomaticallyAverage.Checked;
             }
         }
 
@@ -609,6 +631,11 @@ namespace datasheetmaker
 
             if (changingcellargs.Contains(tuple))
                 return;
+
+            //var val = NumberExpression.Parse(dtaGrid.Rows[e.RowIndex].Cells[e.ColumnIndex].Value?.ToString() ?? "");
+            //if (val != null &&
+            //    Math.Abs(val.Value - 3.293333f) < 0.00001f)
+            //    System.Diagnostics.Debugger.Break();
 
             changingcellargs.Add(tuple);
 
