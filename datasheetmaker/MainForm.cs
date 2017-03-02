@@ -224,6 +224,8 @@ namespace datasheetmaker
                                             if (units[m] != "")
                                                 answers[m] += " " + units[m];
                                         }
+                                        catch (IndexOutOfRangeException) {
+                                        }
                                         catch (InvalidOperationException) {
                                         }
                                     }
@@ -471,7 +473,10 @@ namespace datasheetmaker
                 updating = true;
                 
                 SetupNewVariables();
-                
+
+                updating = true;
+                updating_averages = true;
+
                 foreach (var xmeasurement in xdatasheet.Element("measurements").Elements("variable")) {
                     var name = xmeasurement.Attribute("name").Value;
                     var i = variables.Select((dt, j) => new { dt, j }).Where(k => k.dt.Name == name).First().j;
@@ -484,7 +489,8 @@ namespace datasheetmaker
                     }
                 }
 
-                updating = false;
+                updating = mnuDataAutomaticallyUpdate.Checked;
+                updating_averages = mnuDataAutomaticallyAverage.Checked;
             }
         }
 
