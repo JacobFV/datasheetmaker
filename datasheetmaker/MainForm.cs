@@ -892,6 +892,9 @@ namespace datasheetmaker
 
         private void mnuDataAutomaticallyUpdate_Click(object sender, EventArgs e) {
             updating = !mnuDataAutomaticallyUpdate.Checked;
+
+            mnuDataAutomaticallyAverage.Checked &= !updating;
+            mnuDataAutomaticallyAverage.Enabled = !updating;
         }
 
         private void mnuDataAutomaticallyAverage_Click(object sender, EventArgs e) {

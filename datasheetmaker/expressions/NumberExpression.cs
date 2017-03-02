@@ -29,6 +29,7 @@ namespace datasheetmaker
 
         static readonly char[] whitespace = " \t\n\r\f\v".ToCharArray();
         static readonly char[] variablenamechars = "^-+1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM._".ToCharArray();
+        static readonly char[] unitchars = "*/^-+1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM.".ToCharArray();
 
         public static NumberExpression Parse(string src) =>
             Parse(ref src);
@@ -68,7 +69,7 @@ namespace datasheetmaker
 
             var units_i = 0;
 
-            while (units_i < copy.Length && variablenamechars.Contains(copy[units_i]))
+            while (units_i < copy.Length && unitchars.Contains(copy[units_i]))
                 units_i++;
 
             var units = UnitsSI.Parse(copy.Substring(0, units_i));
