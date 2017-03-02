@@ -24,7 +24,7 @@ namespace datasheetmaker
             ) {
             builder.Append(Value.ToString("0.####"));
             //builder.Append(" ");
-            builder.Append(Units);
+            builder.Append(Units.PrettyPrint());
         }
 
         static readonly char[] whitespace = " \t\n\r\f\v".ToCharArray();

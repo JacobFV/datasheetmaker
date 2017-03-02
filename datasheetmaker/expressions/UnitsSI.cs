@@ -58,16 +58,16 @@ namespace datasheetmaker
                 );
 
         static readonly Dictionary<char, int> prefix_degrees = new Dictionary<char, int> {
-            {'k',3 },
+            {'k', 3 },
             {'h', 2 },
-            {'D',1 },
+            {'D', 1 },
             {'d', -1 },
             {'c', -2 },
             {'m', -3 },
             {'n', -9 }
         };
 
-        public static UnitsSI Parse(string units) =>
+        public static UnitsSI ParseOld(string units) =>
             new UnitsSI(
                     units
                         .Split(new char[] { ' ', '.' }, StringSplitOptions.RemoveEmptyEntries)
@@ -103,7 +103,138 @@ namespace datasheetmaker
                         .ToArray()
                 );
 
+        public static readonly string littlenumbers = "⁰¹²³⁴⁵⁶⁷⁸⁹";
+
+        public static string LittleForm(int i) {
+            if (i < 0)
+                return "‾" + LittleForm(-i);
+
+            if (i == 0)
+                return littlenumbers[0].ToString();
+            else if (i > 10)
+                return LittleForm(i / 10) + littlenumbers[i % 10].ToString();
+            else return littlenumbers[i].ToString();
+        }
+
+        public static UnitsSI Parse(string units) {
+            var running = new UnitsSI();
+            var op = "";
+
+            var i_next = 0;
+            var i_current = 0;
+
+            while (i_current < units.Length) {
+                i_next = units.IndexOfAny("/*".ToCharArray(), i_current);
+                if (i_next == -1)
+                    i_next = units.Length;
+
+                var subset = units.Substring(i_current, i_next - i_current);
+                var operand = ParseOld(subset);
+                switch (op) {
+                    case "":
+                        running = operand;
+                        break;
+
+                    case "*":
+                        running = running.Multiply(operand);
+                        break;
+
+                    case "/":
+                        running = running.Multiply(operand.Recipricol());
+                        break;
+
+                    default:
+                        throw new FormatException();
+                }
+
+                if (i_next == units.Length)
+                    break;
+
+                op = units[i_next].ToString();
+                i_current = i_next + 1;
+            }
+
+            return running;
+        }
+
+        public string PrettyPrint() {
+            var positive =
+                unitdegrees
+                    .Where(_ => _.Value.Item2 > 0)
+                    .Select(
+                            _ =>
+                                (_.Value.Item1 != 0 ?
+                                prefix_degrees
+                                    .Keys
+                                    .FirstOrDefault(i => prefix_degrees[i] == _.Value.Item1)
+                                    .ToString() :
+                                    ""
+                                    ) + 
+                                    _.Key +
+                                    (_.Value.Item2 != 1 ?
+                                        LittleForm(_.Value.Item2).ToString() :
+                                        "")
+                        )
+                    .ToArray();
+
+            var negative =
+                unitdegrees
+                    .Where(_ => _.Value.Item2 < 0)
+                    .Select(
+                            _ =>
+                                (_.Value.Item1 != 0 ?
+                                prefix_degrees
+                                    .Keys
+                                    .FirstOrDefault(i => prefix_degrees[i] == _.Value.Item1)
+                                    .ToString() :
+                                    ""
+                                    ) +
+                                    _.Key +
+                                    (_.Value.Item2 != -1 ?
+                                        LittleForm(-_.Value.Item2).ToString() :
+                                        "")
+                        )
+                    .ToArray();
+
+            if (positive.Length == 0 &&
+                negative.Length == 0)
+                return "";
+
+            if(positive.Length == 0)
+                negative =
+                    unitdegrees
+                        .Where(_ => _.Value.Item2 > 0)
+                        .Select(
+                                _ =>
+                                    prefix_degrees
+                                        .Keys
+                                        .FirstOrDefault(i => prefix_degrees[i] == _.Value.Item1)
+                                        .ToString() +
+                                        _.Key +
+                                        (_.Value.Item2 != 1 ?
+                                            LittleForm(_.Value.Item2).ToString() :
+                                            "")
+                            )
+                        .ToArray();
+
+            var positivestring =
+                string.Join(".", positive);
+
+            var negativestring =
+                string.Join(".", negative);
+
+            if (positive.Length != 0) {
+                if (negativestring.Length != 0)
+                    return $"{positivestring}/{negativestring}";
+                else return positivestring;
+            }
+            else return negativestring;
+        }
+
         public override string ToString() =>
+            PrettyPrint();
+
+        public string UglyToString() =>
             string.Join(
                     ".",
                     unitdegrees
