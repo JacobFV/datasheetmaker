@@ -561,7 +561,7 @@ namespace datasheetmaker
                         for (int j = 0; j < dtaGrid.Rows.Count; j++) {
                             var row = dtaGrid.Rows[j];
 
-                            var cellvalue = row.Cells[i].Value?.ToString();
+                            var cellvalue = row.Cells[i].FormattedValue?.ToString();
                             if (cellvalue != null) {
                                 file.WriteStartElement("value");
                                 file.WriteAttributeString("i", j.ToString());
