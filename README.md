@@ -1,11 +1,11 @@
-#Help Guide
+# Help Guide
 This program "datasheetmaker" was designed to make it really easy to make data sheets for use in science class.
 
-##0. Contents
+## 0. Contents
 1. Overview
 2. Formatting Units
 	
-##1. Overview
+## 1. Overview
 Usually, when you use datasheetmaker, you'll want to do this:
 1. Understand what you'll be doing in **the lab**
 2. **Understand what information** you'll be recording at what time
@@ -23,6 +23,6 @@ Usually, when you use datasheetmaker, you'll want to do this:
 13. **Prepare the workbook** so it will look well when printed. ([Here](https://support.office.com/en-us/article/Prepare-a-worksheet-for-printing-02103553-7B45-4871-BC7F-F005D9555AB5), [there](https://support.office.com/en-US/article/Print-rows-with-column-headers-on-top-of-every-page-D3550133-F6A1-4C72-AD70-5309A2E8FE8C), and [this](https://support.office.com/en-US/article/Scale-a-worksheet-34a91eb5-8b4e-4a8a-ab28-b6492012eaae) are some good article on formatting Excel workbooks)
 14. **Print**!
 
-##2. Formatting Units
+## 2. Formatting Units
 Units are separated with period dots: `.`
 Instead of saying, for example, `m/s` for meters-per-second, with datasheetmaker we say `m.s^-1`. We do this because it's less ambiguous when you do `m.kg/s/s`
